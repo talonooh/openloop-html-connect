@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "uglifyjs src/index.js --compress --mangle --output index.js",
-    "test": "npm run build && jest"
+    "test": "npm run build && jest --env=node"
   },
   "repository": {
     "type": "git",

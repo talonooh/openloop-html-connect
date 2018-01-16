@@ -40,7 +40,7 @@ document.getElementById("myImageId").src = openLoopConnect.getSyncPath() + image
 # API
 
 ## getSyncPath()
-Gets the current sync path. 
+Gets the current sync path.
 
 You should use this path as suffix for any external asset you need to request as it may change depending on the Media Owner.
 
@@ -57,7 +57,7 @@ You should **NEVER use this method** unless you are a Media Owner.
 This method is reserved for Media Owner's players that can directly specify the sync path.
 
 ## getFrameId()
-Gets the current frame id. 
+Gets the current frame id.
 
 Depending on Media Owner there will be different ways to retrieve the frame id, so this methods provides you a single entry point to retrieve that.
 

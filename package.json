@@ -4,7 +4,8 @@
   "description": "HTML5 SDK for connecting OpenLoop with HTML Creatives with interfaces to simplify Media Owner integration for DOOH Dynamic Campaigns.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "build": "uglifyjs src/index.js --compress --mangle --output index.js",
+    "test": "npm run build && jest"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/q-media/openloop-html-connect#readme",
   "devDependencies": {
-    "jest": "^22.1.1"
+    "jest": "^22.1.1",
+    "uglify-js": "^3.3.7"
   }
 }

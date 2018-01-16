@@ -1,4 +1,4 @@
-const openLoopConnect = require('../index');
+const openLoopConnect = require('../');
 
 describe('openLoopConnect', () => {
   describe('getSyncPath', () => {

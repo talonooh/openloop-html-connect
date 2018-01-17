@@ -1,0 +1,5 @@
+# Exclude all files except dist files for NPM.
+.vscode
+src
+tests
+.editorconfig

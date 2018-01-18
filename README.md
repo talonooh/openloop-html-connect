@@ -14,7 +14,16 @@ And require/import it on your project.
 
 Or just copy the content on [index.js](index.js) and paste it on your creative.
 
-# Example
+# Examples
+
+## Creative using webpack
+You can see a complete creative example on:
+
+[examples/creative-example](examples/creative-example)
+
+ This is an example using this library and webpack for generating an unique HTML with everything self contained.
+
+## Quick sample
 ```javascript
 // Import or copy library. (e.g.: ES6 / TS using webpack).
 import openLoopConnect from 'openloop-html-connect';
@@ -81,6 +90,11 @@ openLoopConnect.isDebug() // will return true.
 // accessing: myCampaign/index.html?frame_id=12345
 openLoopConnect.isDebug() // will return false
 ```
+
+# Ajax calls
+You can make any ajax calls (for example for loading a json file with configuration) but **always** remember two things:
+- Use the `getSyncPath` to know the final url for your asset.
+- Enable credentials/cookies, as OpenLoop and the Media Owner authenticate file access using cookies behind the scenes.
 
 # Workflow
 - Download or install this library from npm.

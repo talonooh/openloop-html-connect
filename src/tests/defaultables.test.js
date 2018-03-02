@@ -1,19 +1,20 @@
-const openLoopConnect = require('../');
+const openLoopConnect = require('../../');
 
-describe('openLoopConnect', () => {
+describe('openLoopConnect defaultables', () => {
 	const sampleLiveCampaignUrl = 'https://stgdp.openloop.it/QDOT/UK/HTML5/DirectPanel/onetime/index.html';
 
 	const setLocationHref = (url) => {
 		window.location.href = url;
 	};
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		global.window = {
 			location: {
 				href: ''
 			}
 		};
 		openLoopConnect.reset();
+		await openLoopConnect.load();
 	});
 
 	describe('getSyncPath', () => {

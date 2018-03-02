@@ -1,5 +1,7 @@
 # Exclude all files except dist files for NPM.
 .vscode
+examples
 src
-tests
+.babelrc
 .editorconfig
+webpack.config.js

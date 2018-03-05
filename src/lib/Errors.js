@@ -1,9 +1,9 @@
 export class OpenLoopHTMLConnectError extends Error {
 	constructor(message) {
-		if(console && console.log && !expect) {
+		if(console && console.log && typeof expect === 'undefined') {
 			// Log error messages despite catches on the creative
 			// to allow MediaOwner to debug when integrating.
-			console.log('ERROR: [OpenLoopHTMLConnect] ' + message);
+			console.log('[OpenLoopHTMLConnect] ' + message);
 		}
 		super('[OpenLoopHTMLConnect] ' + message);
 	}

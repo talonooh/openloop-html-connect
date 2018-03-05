@@ -41,12 +41,14 @@ const OpenLoopConnect = () => {
 		_isDebug = new Defaultable(false, () => (getQueryString('debug') !== null)),
 		_isLive = new Defaultable(false, isLive),
 		_feeds = {
-			assets: new ArrayFeedsCollection(_syncPath),
-			freeTexts: new ArrayFeedsCollection(),
+			assets: new ArrayFeedsCollection(_syncPath, item => item['image_src']),
+			freeTexts: new ArrayFeedsCollection(null, item => item['body']),
 			json: new FeedsCollection()
 		},
 		_configLoader = new ConfigLoader(_configFile, configData => {
-			_feeds.json.setFeeds(configData.openLoopConfig.json);
+			_feeds.assets.setFeedsFromConfig(configData.openLoopConfig.images);
+			_feeds.freeTexts.setFeedsFromConfig(configData.openLoopConfig['free_text']);
+			_feeds.json.setFeedsFromConfig(configData.openLoopConfig.json);
 		}),
 		_reset = function () {
 			// Just for testing purposes.

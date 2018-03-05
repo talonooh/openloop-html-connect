@@ -1,16 +1,16 @@
 import Defaultable from "./Defaultable";
+import { readJSONPCollection } from './Utils';
 
 export default class FeedsCollection {
-	constructor(accessor = null) {
-		this.feedCollection = new Defaultable({}, accessor);
+	constructor() {
+		this.feedCollection = new Defaultable({});
 	}
 
-	setFeeds(data) {
-		console.log(data.data);
-		// TODO: Dynamically parse one/multiple feeds, and set feedId from feed.@id.
-		this.feedCollection.setValue({
-			weather: data.data
-		});
+	setFeedsFromConfig(configData) {
+		const data = (configData && configData.data) ?
+			readJSONPCollection(configData.data) : {};
+
+		this.feedCollection.setValue(data);
 	}
 
 	getFeed(feedId) {

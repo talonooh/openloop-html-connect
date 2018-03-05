@@ -1,6 +1,13 @@
+import { readJSONPArray } from './Utils';
+
 export default class ArrayFeed {
-	constructor() {
+	constructor(itemMapper = null) {
+		this.itemMapper = itemMapper;
 		this.items = [];
+	}
+
+	setItemsFromConfig(configData) {
+		this.items = readJSONPArray(configData, this.itemMapper);
 	}
 
 	addItem(item) {

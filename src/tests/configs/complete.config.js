@@ -87,7 +87,7 @@ openLoopConfig({
 		]
 	  },
 	  "rss": null,
-	  "xml": {
+	  "json": {
 		"data": [
 		  {
 			"@id": "ApiFeed6",

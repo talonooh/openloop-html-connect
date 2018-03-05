@@ -1,10 +1,23 @@
 import FeedsCollection from "./FeedsCollection";
 import ArrayFeed from "./ArrayFeed";
+import { readJSONPCollection } from './Utils';
 
 export default class ArrayFeedsCollection extends FeedsCollection {
-	constructor(syncPath = null, accessor = null) {
-		super(accessor);
+	constructor(syncPath = null, itemMapper = null) {
+		super();
+		this.itemMapper = itemMapper;
 		this.syncPath = syncPath;
+	}
+
+	setFeedsFromConfig(configData) {
+		const data = (configData && configData.data) ?
+			readJSONPCollection(configData.data, feed => {
+				const item = new ArrayFeed(this.itemMapper);
+				item.setItemsFromConfig(feed.item)
+				return item;
+			}) : {};
+
+		this.feedCollection.setValue(data);
 	}
 
 	getFeed(feedId) {

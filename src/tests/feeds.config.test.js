@@ -38,8 +38,14 @@ describe('openLoopConnect.feeds using config file', () => {
 
 		describe('when using getFeed', () => {
 			it('should not return the defaults values setted', () => {
-				expect(openLoopConnect.feeds.assets.getFeed('cloudy')).toBe(null);
-				expect(openLoopConnect.feeds.freeTexts.getFeed('cloudy')).toBe(null);
+				expect(() => {
+					openLoopConnect.feeds.assets.getFeed('cloudy')
+				}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
+
+				expect(() => {
+					openLoopConnect.feeds.freeTexts.getFeed('cloudy')
+				}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
+
 				expect(openLoopConnect.feeds.json.getFeed('weather').panels).toBe(undefined);
 			});
 		});
@@ -57,7 +63,9 @@ describe('openLoopConnect.feeds using config file', () => {
 			});
 
 			it('should not return invalid feed', () => {
-				expect(openLoopConnect.feeds.assets.getFeed('invalid')).toBe(null);
+				expect(() => {
+					openLoopConnect.feeds.assets.getFeed('invalid');
+				}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
 			});
 		});
 

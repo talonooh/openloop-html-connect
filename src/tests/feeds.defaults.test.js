@@ -76,8 +76,22 @@ describe('openLoopConnect.feeds using defaults', () => {
 					openLoopConnect.reset()
 				});
 
-				it('should not have values', () => {
-					expect(openLoopConnect.feeds.freeTexts.getFeed('cloudy')).toBe(null);
+				it('should not let you access feeds before load', () => {
+					expect(() => {
+						openLoopConnect.feeds.freeTexts.getFeed('cloudy');
+					}).toThrowError(openLoopConnect.errors.InvalidOperationError);
+				});
+
+				describe('and after re-loading', () => {
+					beforeEach(async () => {
+						await openLoopConnect.load();
+					});
+
+					it('should not have values', () => {
+						expect(() => {
+							openLoopConnect.feeds.freeTexts.getFeed('cloudy');
+						}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
+					});
 				});
 			});
 		});
@@ -112,8 +126,22 @@ describe('openLoopConnect.feeds using defaults', () => {
 					openLoopConnect.reset()
 				});
 
-				it('should not have values', () => {
-					expect(openLoopConnect.feeds.json.getFeed('weather')).toBe(null);
+				it('should not let you access feeds before load', () => {
+					expect(() => {
+						openLoopConnect.feeds.json.getFeed('weather');
+					}).toThrowError(openLoopConnect.errors.InvalidOperationError);
+				});
+
+				describe('and after re-loading', () => {
+					beforeEach(async () => {
+						await openLoopConnect.load();
+					});
+
+					it('should not have values', () => {
+						expect(() => {
+							openLoopConnect.feeds.json.getFeed('weather');
+						}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
+					});
 				});
 			});
 		});

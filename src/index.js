@@ -5,6 +5,7 @@ import FeedsCollection from 'lib/FeedsCollection';
 import ArrayFeedsCollection from 'lib/ArrayFeedsCollection';
 import fetchJsonp from 'fetch-jsonp';
 import ConfigLoader from 'lib/ConfigLoader';
+import errors, { ResourceNotFoundError } from 'lib/Errors';
 
 const OpenLoopConnect = () => {
 	// OpenLoopConnect HTML5 SDK Library.
@@ -26,7 +27,7 @@ const OpenLoopConnect = () => {
 			} else {
 				return defaultValue;
 			}
-		}),
+		}, true),
 		_frameId = new Defaultable(null, () => {
 			let frameId = getQueryString('frame_id');
 			if (frameId === null) {
@@ -34,7 +35,7 @@ const OpenLoopConnect = () => {
 				frameId = getQueryString('player_id');
 			}
 			if (frameId === null) {
-				console.log('Frame id requested but not found! Make sure to open this page with "?frame_id=[yourFrameId]" on the query string.');
+				throw new ResourceNotFoundError('Frame id requested but not found! Make sure to open this page with "?frame_id=[yourFrameId]" on the query string.');
 			}
 			return frameId;
 		}),
@@ -50,8 +51,18 @@ const OpenLoopConnect = () => {
 			_feeds.freeTexts.setFeedsFromConfig(configData.openLoopConfig['free_text']);
 			_feeds.json.setFeedsFromConfig(configData.openLoopConfig.json);
 		}),
+		_load = (callback) => {
+			const promise = _configLoader
+				.load()
+				.then(() => {
+					Defaultable.ready = true;
+				});
+
+			return (callback) ? promise.then(callback) : promise;
+		},
 		_reset = function () {
 			// Just for testing purposes.
+			Defaultable.ready = false;
 			_syncPath.reset();
 			_configFile.reset();
 			_configLoader.reset();
@@ -72,8 +83,9 @@ const OpenLoopConnect = () => {
 		isLive: _isLive.getValue,
 		isDebug: _isDebug.getValue,
 		feeds: _feeds,
-		load: _configLoader.load,
-		reset: _reset
+		load: _load,
+		reset: _reset,
+		errors
 	};
 };
 

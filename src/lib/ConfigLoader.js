@@ -1,4 +1,5 @@
 import { jsonpLoader } from 'lib/Utils';
+import { ConfigFileError } from 'lib/Errors';
 
 export default class ConfigLoader {
 	constructor(configFile, accessor) {
@@ -22,7 +23,7 @@ export default class ConfigLoader {
 					this.accessor(json);
 					resolve();
 				}).catch(ex => {
-					console.log('parsing failed', ex);
+					throw new ConfigFileError('Invalid configuration JSON file. Unable to parse.');
 					resolve();
 				});
 			} else {

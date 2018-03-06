@@ -1,6 +1,6 @@
 require('./styles.css');
-var moment = require('moment');
-var openLoopConnect = require('openloop-html-connect');
+import * as moment from 'moment';
+import openLoopConnect from 'openloop-html-connect';
 
 // -----------------------------------------------------
 // Defaults for local testing on dev environment:
@@ -28,7 +28,7 @@ openLoopConnect.feeds.json.addDefaultFeed('weather', {
 // do not include it on your real creative and do not
 // use an OpenLoopConfig file for dev environment as
 // the structure of the real published config may change.
-//openLoopConnect.setDefaultConfigFile('../sample.config.js');
+openLoopConnect.setDefaultConfigFile('../sample.config.js');
 // ------------------------------------------------------
 
 let imageToDisplay;
@@ -52,7 +52,7 @@ openLoopConnect.load(function () {
 		createElementWithText('p', 'FrameID: ' + openLoopConnect.getFrameId());
 
 		// Your logic depending on frame_id and parsing of feed data.
-		// e.g. Get GrandVisual feed with weather data associated to a frameId.
+		// e.g. Feed with weather data associated to a frameId.
 		let customFeed = openLoopConnect.feeds.json.getFeed('weather');
 		let frameId = parseInt(openLoopConnect.getFrameId());
 		// The following parse is based on your own feed json structure

@@ -18,15 +18,16 @@ This library interface all you need for getting panel's information or campaign 
     - [getFrameId()](#getframeid)
     - [isLive()](#islive)
     - [isDebug()](#isdebug)
-    - [feeds.json](#feedsjson)
-        - [feeds.json.getFeed(feedId)](#feedsjsongetfeedfeedid)
-        - [feeds.json.addDefaultFeed(feedId, feedObject)](#feedsjsonadddefaultfeedfeedid-feedobject)
-    - [feeds.freeTexts](#feedsfreetexts)
-        - [feeds.freeTexts.getFeed(feedId)](#feedsfreetextsgetfeedfeedid)
-        - [feeds.freeTexts.addDefaultFeed(feedId)](#feedsfreetextsadddefaultfeedfeedid)
-    - [feeds.assets](#feedsassets)
-        - [feeds.assets.getFeed(feedId)](#feedsassetsgetfeedfeedid)
-        - [feeds.assets.addDefaultFeed(feedId)](#feedsassetsadddefaultfeedfeedid)
+    - [feeds](#feeds)
+        - [feeds.json](#feedsjson)
+            - [feeds.json.getFeed(feedId)](#feedsjsongetfeedfeedid)
+            - [feeds.json.addDefaultFeed(feedId, feedObject)](#feedsjsonadddefaultfeedfeedid-feedobject)
+        - [feeds.freeTexts](#feedsfreetexts)
+            - [feeds.freeTexts.getFeed(feedId)](#feedsfreetextsgetfeedfeedid)
+            - [feeds.freeTexts.addDefaultFeed(feedId)](#feedsfreetextsadddefaultfeedfeedid)
+        - [feeds.assets](#feedsassets)
+            - [feeds.assets.getFeed(feedId)](#feedsassetsgetfeedfeedid)
+            - [feeds.assets.addDefaultFeed(feedId)](#feedsassetsadddefaultfeedfeedid)
     - [errors](#errors)
         - [errors.OpenLoopHTMLConnectError](#errorsopenloophtmlconnecterror)
         - [errors.ResourceNotFoundError](#errorsresourcenotfounderror)
@@ -188,31 +189,66 @@ openLoopConnect.isDebug() // will return true.
 openLoopConnect.isDebug() // will return false
 ```
 
-## feeds.json
-### feeds.json.getFeed(feedId)
+## feeds
+OpenLoop and OpenLoop API lets you set/upload these **types of feeds**:
+
+- assets (images or videos)
+- free texts
+- ~~xml~~ (not used on HTML5)
+- json
+
+And for each **type of feed** you can have as many feeds as you want, each of them with a defined **feedId**.
+Then for each feed you can have various items where the only important thing is the order.
+
+So the full structure will be:
+
+- assets (images or videos)
+	- feed1
+		- image1
+		- image2
+		- video1
+	- feed2
+		- image1
+		- image2
+		- video1
+- free texts
+	- feed1
+		- text1
+		- text2
+- json
+	- feed1
+	- feed2
+
+So you can say for example that the **second item** of the **assets** feed with id **cloudy** will be a video for a cloudy day and you can retrieve it like this.
+```javascript
+let videoSrc = openLoopConnect.feeds.assets.getFeed('cloudy')[1];
+```
+
+### feeds.json
+#### feeds.json.getFeed(feedId)
 Retrieves the json feed by id. Returns the object resulting on parsing the original JSON feed embedded by OpenLoop, or the feedObject defined by `feeds.json.addDefaultFeed`.
 
-### feeds.json.addDefaultFeed(feedId, feedObject)
+#### feeds.json.addDefaultFeed(feedId, feedObject)
 Adds a default feed with the given id and the feedObject.
 
-## feeds.freeTexts
-### feeds.freeTexts.getFeed(feedId)
+### feeds.freeTexts
+#### feeds.freeTexts.getFeed(feedId)
 Retrieves the free texts feed by id. Returns an array of strings which are the free texts defined and embedded by OpenLoop, or the items defined by `feeds.freeTexts.addDefaultFeed` and `addItem`.
 
-### feeds.freeTexts.addDefaultFeed(feedId)
+#### feeds.freeTexts.addDefaultFeed(feedId)
 Adds a default feed with the given id. Then this feed can be filled using the `addItem(item)` method using chaining pattern like the following example.
 ```javascript
 openLoopConnect.feeds.freeTexts.addDefaultFeed('cloudy')
 	.addItem('Today is cloudy')
 	.addItem('Today is overcast');
 ```
-## feeds.assets
-### feeds.assets.getFeed(feedId)
+### feeds.assets
+#### feeds.assets.getFeed(feedId)
 Retrieves the assets feed by id. Returns an array of strings which are the asset's paths uploaded and embedded by OpenLoop, or the items defined by `feeds.assets.addDefaultFeed` and `addItem`.
 
 *Note:* Those assets paths already contains the sync path as prefix of the asset path.
 
-### feeds.assets.addDefaultFeed(feedId)
+#### feeds.assets.addDefaultFeed(feedId)
 Adds a default feed with the given id. Then this feed can be filled using the `addItem(item)` method using chaining pattern like the following example.
 ```javascript
 openLoopConnect.feeds.assets.addDefaultFeed('cloudy')

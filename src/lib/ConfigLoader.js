@@ -1,5 +1,4 @@
 import { jsonpLoader } from 'lib/Utils';
-import { ConfigFileError } from 'lib/Errors';
 
 export default class ConfigLoader {
 	constructor(configFile, accessor) {
@@ -15,7 +14,7 @@ export default class ConfigLoader {
 	}
 
 	loadConfig() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			const configFile = this.configFile.getValue();
 			if (configFile !== null) {
 				jsonpLoader(configFile)
@@ -23,8 +22,7 @@ export default class ConfigLoader {
 					this.accessor(json);
 					resolve();
 				}).catch(ex => {
-					throw new ConfigFileError('Invalid configuration JSON file. Unable to parse.');
-					resolve();
+					reject('[OpenLoopHTMLConnect] [ConfigFile] Configuration JSON file setted but invalid or not found.');
 				});
 			} else {
 				resolve();
@@ -32,11 +30,11 @@ export default class ConfigLoader {
 		});
 	}
 
-	load(callback) {
+	load() {
 		if (this.promise === null) {
 			this.promise = this.loadConfig();
 		}
 
-		return (callback) ? this.promise.then(callback) : this.promise;
+		return this.promise;
 	}
 }

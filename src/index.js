@@ -51,14 +51,22 @@ const OpenLoopConnect = () => {
 			_feeds.freeTexts.setFeedsFromConfig(configData.openLoopConfig['free_text']);
 			_feeds.json.setFeedsFromConfig(configData.openLoopConfig.json);
 		}),
-		_load = (callback) => {
-			const promise = _configLoader
+		_load = (success, error) => {
+			let promise = _configLoader
 				.load()
 				.then(() => {
 					Defaultable.ready = true;
 				});
 
-			return (callback) ? promise.then(callback) : promise;
+			if(success) {
+				promise = promise.then(success);
+			}
+
+			if(error) {
+				promise = promise.catch(error);
+			}
+
+			return promise;
 		},
 		_reset = function () {
 			// Just for testing purposes.

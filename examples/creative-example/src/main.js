@@ -23,7 +23,17 @@ openLoopConnect.feeds.json.addDefaultFeed('weather', {
 // End of defaults for local testing definition.
 // ------------------------------------------------------
 
-var createElementWithText = function (element, text) {
+// ------------------------------------------------------
+// setDefaultConfigFile is only for testing purposes
+// do not include it on your real creative and do not
+// use an OpenLoopConfig file for dev environment as
+// the structure of the real published config may change.
+//openLoopConnect.setDefaultConfigFile('../sample.config.js');
+// ------------------------------------------------------
+
+let imageToDisplay;
+let videoToDisplay;
+const createElementWithText = function (element, text) {
 	var element = document.createElement(element);
 	var textNode = document.createTextNode(text);
 	element.appendChild(textNode);
@@ -31,10 +41,9 @@ var createElementWithText = function (element, text) {
 }
 
 createElementWithText('h1', 'QDOT HTML5 Creative Sample');
-openLoopConnect.load(function () {
-	let imageToDisplay;
-	let videoToDisplay;
 
+openLoopConnect.load(function () {
+	// On success parsing Config file.
 	try {
 		createElementWithText('p', 'Current date: ' + moment().format());
 		createElementWithText('p', 'Sync path: ' + openLoopConnect.getSyncPath());
@@ -66,12 +75,27 @@ openLoopConnect.load(function () {
 		imageToDisplay = assetsFeed[0];
 		videoToDisplay = assetsFeed[1];
 	} catch (e) {
-		createElementWithText('strong', 'Something failed, fallback to embedded defaults.');
-		imageToDisplay = 'blob:embeddedImage';
-		videoToDisplay = 'blob:embeddedVideo';
+		// Error on creative logic.
+		// e.g.: Feed not found, frameId not found, panel not found, etc..
+		fallBackToDefaults();
 	}
 
+	renderContent();
+}, function (e) {
+	console.log(e);
+	// On error loading/parsing Config file.
+	fallBackToDefaults();
+	renderContent();
+});
+
+function fallBackToDefaults() {
+	createElementWithText('strong', 'Something failed, fallback to embedded defaults.');
+	imageToDisplay = 'blob:embeddedImage';
+	videoToDisplay = 'blob:embeddedVideo';
+}
+
+function renderContent() {
 	createElementWithText('h2', 'Example assets');
 	createElementWithText('p', 'Image: ' + imageToDisplay);
 	createElementWithText('p', 'Video: ' + videoToDisplay);
-});
+}

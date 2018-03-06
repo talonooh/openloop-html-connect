@@ -9,12 +9,6 @@ export class OpenLoopHTMLConnectError extends Error {
 	}
 }
 
-export class ConfigFileError extends OpenLoopHTMLConnectError {
-	constructor(message) {
-		super('[ConfigFileError] ' + message);
-	}
-}
-
 export class ResourceNotFoundError extends OpenLoopHTMLConnectError {
 	constructor(message) {
 		super('[ResourceNotFoundError] ' + message);
@@ -29,7 +23,6 @@ export class InvalidOperationError extends OpenLoopHTMLConnectError {
 
 export default {
 	OpenLoopHTMLConnectError,
-	ConfigFileError,
 	ResourceNotFoundError,
 	InvalidOperationError
 };

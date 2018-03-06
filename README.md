@@ -5,6 +5,37 @@ HTML5 SDK for connecting OpenLoop with HTML Creatives with interfaces to simplif
 
 This library interface all you need for getting panel's information or campaign assets while the HTML5 creative is running on any Media Owner's panel.
 
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+    - [Creative using webpack](#creative-using-webpack)
+    - [Quick sample](#quick-sample)
+- [API](#api)
+    - [load(success, error)](#loadsuccess-error)
+    - [getSyncPath()](#getsyncpath)
+    - [setDefaultSyncPath(syncPath)](#setdefaultsyncpathsyncpath)
+    - [setSyncPath(syncPath)](#setsyncpathsyncpath)
+    - [getFrameId()](#getframeid)
+    - [isLive()](#islive)
+    - [isDebug()](#isdebug)
+    - [feeds.json](#feedsjson)
+        - [feeds.json.getFeed(feedId)](#feedsjsongetfeedfeedid)
+        - [feeds.json.addDefaultFeed(feedId, feedObject)](#feedsjsonadddefaultfeedfeedid-feedobject)
+    - [feeds.freeTexts](#feedsfreetexts)
+        - [feeds.freeTexts.getFeed(feedId)](#feedsfreetextsgetfeedfeedid)
+        - [feeds.freeTexts.addDefaultFeed(feedId)](#feedsfreetextsadddefaultfeedfeedid)
+    - [feeds.assets](#feedsassets)
+        - [feeds.assets.getFeed(feedId)](#feedsassetsgetfeedfeedid)
+        - [feeds.assets.addDefaultFeed(feedId)](#feedsassetsadddefaultfeedfeedid)
+    - [errors](#errors)
+        - [errors.OpenLoopHTMLConnectError](#errorsopenloophtmlconnecterror)
+        - [errors.ResourceNotFoundError](#errorsresourcenotfounderror)
+        - [errors.InvalidOperationError](#errorsinvalidoperationerror)
+- [Ajax calls](#ajax-calls)
+- [How it works](#how-it-works)
+- [Browser compatibility](#browser-compatibility)
+- [Support](#support)
+
 # Installation
 If you are using webpack or similar, install the library:
 
@@ -63,7 +94,7 @@ openLoopConnect.feeds.json.addDefaultFeed('weather', {
 let imageToDisplay;
 
 openLoopConnect.load(function () {
-	// On success parsing Config file.
+	// On success parsing config file or loading setted defaults.
 	try {
 		// Your logic depending on frame_id and parsing of feed data.
 		let customFeed = openLoopConnect.feeds.json.getFeed('weather');
@@ -71,23 +102,22 @@ openLoopConnect.load(function () {
 		// The following parse is based on your own feed json structure
 		let panelWeatherData = customFeed.panels.find(panel => panel.id === frameId);
 		let currentWeather = panelWeatherData.status;
-
 		// Your logic depending on feed data.
 		let imageToDisplay = openLoopConnect.feeds.assets.getFeed(currentWeather)[0];
 	} catch (e) {
 		// Error on creative logic.
 		// e.g.: Feed not found, frameId not found, panel not found, etc..
-		fallBackToDefaults();
+		fallBackToEmbeddedDefaults();
 	}
 
 	renderContent();
 }, function (e) {
 	// On error loading/parsing Config file.
-	fallBackToDefaults();
+	fallBackToEmbeddedDefaults();
 	renderContent();
 });
 
-function fallBackToDefaults() {
+function fallBackToEmbeddedDefaults() {
 	imageToDisplay = 'blob:embeddedImage';
 }
 
@@ -159,17 +189,17 @@ openLoopConnect.isDebug() // will return false
 ```
 
 ## feeds.json
-#### feeds.json.getFeed(feedId)
+### feeds.json.getFeed(feedId)
 Retrieves the json feed by id. Returns the object resulting on parsing the original JSON feed embedded by OpenLoop, or the feedObject defined by `feeds.json.addDefaultFeed`.
 
-#### feeds.json.addDefaultFeed(feedId, feedObject)
+### feeds.json.addDefaultFeed(feedId, feedObject)
 Adds a default feed with the given id and the feedObject.
 
 ## feeds.freeTexts
-#### feeds.freeTexts.getFeed(feedId)
+### feeds.freeTexts.getFeed(feedId)
 Retrieves the free texts feed by id. Returns an array of strings which are the free texts defined and embedded by OpenLoop, or the items defined by `feeds.freeTexts.addDefaultFeed` and `addItem`.
 
-#### feeds.freeTexts.addDefaultFeed(feedId)
+### feeds.freeTexts.addDefaultFeed(feedId)
 Adds a default feed with the given id. Then this feed can be filled using the `addItem(item)` method using chaining pattern like the following example.
 ```javascript
 openLoopConnect.feeds.freeTexts.addDefaultFeed('cloudy')
@@ -177,12 +207,12 @@ openLoopConnect.feeds.freeTexts.addDefaultFeed('cloudy')
 	.addItem('Today is overcast');
 ```
 ## feeds.assets
-#### feeds.assets.getFeed(feedId)
+### feeds.assets.getFeed(feedId)
 Retrieves the assets feed by id. Returns an array of strings which are the asset's paths uploaded and embedded by OpenLoop, or the items defined by `feeds.assets.addDefaultFeed` and `addItem`.
 
 *Note:* Those assets paths already contains the sync path as prefix of the asset path.
 
-#### feeds.assets.addDefaultFeed(feedId)
+### feeds.assets.addDefaultFeed(feedId)
 Adds a default feed with the given id. Then this feed can be filled using the `addItem(item)` method using chaining pattern like the following example.
 ```javascript
 openLoopConnect.feeds.assets.addDefaultFeed('cloudy')

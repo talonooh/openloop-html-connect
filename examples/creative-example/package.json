@@ -20,6 +20,6 @@
     "webpack-clean": "^1.0.0"
   },
   "dependencies": {
-    "openloop-html-connect": "0.0.1"
+    "openloop-html-connect": "1.0.0"
   }
 }

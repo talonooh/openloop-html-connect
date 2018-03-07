@@ -20,3 +20,5 @@ Just open it on a browser like this:
 file:///C:/git/openloop-html-connect/examples/sample-creative/dist/index.html?frame_id=123&debug=1
 
 Remember that you can set `frame_id` and `debug` on the query string, as [documented on the library](https://github.com/q-media/openloop-html-connect).
+
+For details please refer to the [source code](src/main.js).

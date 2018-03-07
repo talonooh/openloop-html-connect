@@ -28,7 +28,7 @@ openLoopConnect.feeds.json.addDefaultFeed('weather', {
 // do not include it on your real creative and do not
 // use an OpenLoopConfig file for dev environment as
 // the structure of the real published config may change.
-openLoopConnect.setDefaultConfigFile('../sample.config.js');
+//openLoopConnect.setDefaultConfigFile('../sample.config.js');
 // ------------------------------------------------------
 
 let imageToDisplay;
@@ -43,7 +43,7 @@ const createElementWithText = function (element, text) {
 createElementWithText('h1', 'QDOT HTML5 Creative Sample');
 
 openLoopConnect.load(function () {
-	// On success parsing Config file.
+	// On success parsing config file or loading setted defaults.
 	try {
 		createElementWithText('p', 'Current date: ' + moment().format());
 		createElementWithText('p', 'Sync path: ' + openLoopConnect.getSyncPath());
@@ -77,18 +77,18 @@ openLoopConnect.load(function () {
 	} catch (e) {
 		// Error on creative logic.
 		// e.g.: Feed not found, frameId not found, panel not found, etc..
-		fallBackToDefaults();
+		fallBackToEmbeddedDefaults();
 	}
 
 	renderContent();
 }, function (e) {
 	console.log(e);
 	// On error loading/parsing Config file.
-	fallBackToDefaults();
+	fallBackToEmbeddedDefaults();
 	renderContent();
 });
 
-function fallBackToDefaults() {
+function fallBackToEmbeddedDefaults() {
 	createElementWithText('strong', 'Something failed, fallback to embedded defaults.');
 	imageToDisplay = 'blob:embeddedImage';
 	videoToDisplay = 'blob:embeddedVideo';

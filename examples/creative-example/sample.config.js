@@ -55,20 +55,22 @@ openLoopConfig({
 			"data": {
 				"@id": "weather",
 				"@timestamp": "1518816947",
-				"panels": [
-					{
-						"id": 123,
-						"status": "sunny"
-					},
-					{
-						"id": 456,
-						"status": "cloudy"
-					},
-					{
-						"id": 789,
-						"status": "cloudy"
-					}
-				]
+				"data": {
+					"panels": [
+						{
+							"id": 123,
+							"status": "sunny"
+						},
+						{
+							"id": 456,
+							"status": "cloudy"
+						},
+						{
+							"id": 789,
+							"status": "cloudy"
+						}
+					]
+				}
 			}
 		}
 	}

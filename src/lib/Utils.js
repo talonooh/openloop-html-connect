@@ -41,12 +41,12 @@ export const readJSONPCollection = (configArrayData, itemMapper = null) => {
 		if (Array.isArray(configArrayData)) {
 			configArrayData.forEach(item => {
 				const id = item['@id'];
-				data[id] = (itemMapper) ? itemMapper(item) : item;
+				data[id] = (itemMapper) ? itemMapper(item) : item.data;
 			});
 		} else if (typeof configArrayData === 'object') {
 			const item = configArrayData;
 			const id = item['@id'];
-			data[id] = (itemMapper) ? itemMapper(item) : item;
+			data[id] = (itemMapper) ? itemMapper(item) : item.data;
 		}
 	}
 	return data;
@@ -63,11 +63,11 @@ export const readJSONPArray = (configArrayData, itemMapper = null) => {
 	if (configArrayData) {
 		if (Array.isArray(configArrayData)) {
 			configArrayData.forEach(item => {
-				const newItem = (itemMapper) ? itemMapper(item) : item;
+				const newItem = (itemMapper) ? itemMapper(item) : item.data;
 				data.push(newItem);
 			});
 		} else if (typeof configArrayData === 'object') {
-			const newItem = (itemMapper) ? itemMapper(configArrayData) : configArrayData;
+			const newItem = (itemMapper) ? itemMapper(configArrayData) : configArrayData.data;
 			data.push(newItem);
 		}
 	}

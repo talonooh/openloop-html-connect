@@ -49,6 +49,30 @@ openLoopConfig({
 				}
 			]
 		},
+		"free_text": {
+			"data": [
+				{
+					"@id": "cloudy",
+					"@timestamp": "1520015719",
+					"item": [
+						{
+							"@id": "0",
+							"body": "Too many clouds today!"
+						}
+					]
+				},
+				{
+					"@id": "sunny",
+					"@timestamp": "1520015719",
+					"item": [
+						{
+							"@id": "0",
+							"body": "You should wear sunglasses today"
+						}
+					]
+				}
+			]
+		},
 		"rss": null,
 		"xml": null,
 		"json": {

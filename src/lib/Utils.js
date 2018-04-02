@@ -25,6 +25,24 @@ export const isLive = () => {
 };
 
 /**
+ * A util that parses key and value of an OpenLoop flag e.g.: {{OPENLOOP-HTML-CONNECT:VERSION=1.0.0}}
+ * @param string flag
+ * @return { key, value } An object with key and value of the flag.
+ */
+export const parseOpenLoopFlag = (flag) => {
+	const regex = RegExp(/^\{\{OPENLOOP-HTML-CONNECT:(\w+)=([\w.]+)\}\}$/);
+	const match = flag.match(regex);
+	if(match === null) {
+		return null;
+	}
+
+	return {
+		key: match[1],
+		value: match[2]
+	};
+}
+
+/**
  * OpenLoop config may contain array feeds or single item feeds.
  * The XML to JSON may change the structure of the resulting JSON
  * depending if the element contains multiple or single children.

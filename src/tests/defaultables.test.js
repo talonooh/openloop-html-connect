@@ -1,4 +1,5 @@
 const openLoopConnect = require('../../');
+const packageJson = require('../../package.json');
 
 describe('openLoopConnect defaultables', () => {
 	const sampleLiveCampaignUrl = 'https://stgdp.openloop.it/QDOT/UK/HTML5/DirectPanel/onetime/index.html';
@@ -6,6 +7,12 @@ describe('openLoopConnect defaultables', () => {
 	const setLocationHref = (url) => {
 		window.location.href = url;
 	};
+
+	describe('when using getVersion', () => {
+		it('should return package.json version', () => {
+			expect(openLoopConnect.getVersion()).toBe(packageJson.version);
+		});
+	});
 
 	describe('when using them before load', () => {
 		beforeEach(() => {
@@ -90,6 +97,16 @@ describe('openLoopConnect defaultables', () => {
 				}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
 			});
 
+			describe('when using setDefaultFrameId', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultFrameId('456');
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getFrameId()).toBe('456');
+				});
+			});
+
 			describe('when using frame_id on the query string', () => {
 				beforeEach(() => {
 					setLocationHref(sampleLiveCampaignUrl + '?frame_id=12345');
@@ -97,6 +114,16 @@ describe('openLoopConnect defaultables', () => {
 
 				it('should return correct value', () => {
 					expect(openLoopConnect.getFrameId()).toBe('12345');
+				});
+
+				describe('and even when using setDefaultFrameId', () => {
+					beforeEach(() => {
+						openLoopConnect.setDefaultFrameId('456');
+					});
+
+					it('should still return query string value', () => {
+						expect(openLoopConnect.getFrameId()).toBe('12345');
+					});
 				});
 			});
 

@@ -1,6 +1,6 @@
 require('es6-promise').polyfill();
 import Defaultable from 'lib/Defaultable';
-import { getQueryString, isLive } from 'lib/Utils';
+import { getQueryString, isLive, parseOpenLoopFlag } from 'lib/Utils';
 import FeedsCollection from 'lib/FeedsCollection';
 import ArrayFeedsCollection from 'lib/ArrayFeedsCollection';
 import fetchJsonp from 'fetch-jsonp';
@@ -11,7 +11,12 @@ const OpenLoopConnect = () => {
 	// OpenLoopConnect HTML5 SDK Library.
 	var _openLoopSyncPath = '{{{OPENLOOP-HTML-CONNECT:SYNC-PATH}}}',
 		_openLoopConfigFile = '{{{OPENLOOP-HTML-CONNECT:CONFIG-FILE}}}',
+		_publisherVersion = '{{{OPENLOOP-HTML-CONNECT:PUBLISHER-VERSION}}}',
+		_version = '{{OPENLOOP-HTML-CONNECT:VERSION=' + OPENLOOP_HTML_CONNECT_VERSION + '}}',
 		_liveSyncPath = '../sync/',
+		_getVersion = () => {
+			return parseOpenLoopFlag(_version).value;
+		},
 		_syncPath = new Defaultable('./', defaultValue => {
 			if (_openLoopSyncPath.indexOf('OPENLOOP-HTML-CONNECT') === -1) {
 				return _openLoopSyncPath;
@@ -28,14 +33,18 @@ const OpenLoopConnect = () => {
 				return defaultValue;
 			}
 		}, true),
-		_frameId = new Defaultable(null, () => {
+		_frameId = new Defaultable(null, defaultValue => {
 			let frameId = getQueryString('frame_id');
 			if (frameId === null) {
 				// If frame_id is not found, fallback to player_id.
 				frameId = getQueryString('player_id');
 			}
 			if (frameId === null) {
-				throw new ResourceNotFoundError('Frame id requested but not found! Make sure to open this page with "?frame_id=[yourFrameId]" on the query string.');
+				if(defaultValue !== null) {
+					frameId = defaultValue;
+				} else {
+					throw new ResourceNotFoundError('Frame id requested but not found! Make sure to open this page with "?frame_id=[yourFrameId]" on the query string.');
+				}
 			}
 			return frameId;
 		}),
@@ -58,11 +67,11 @@ const OpenLoopConnect = () => {
 					Defaultable.ready = true;
 				});
 
-			if(success) {
+			if (success) {
 				promise = promise.then(success);
 			}
 
-			if(error) {
+			if (error) {
 				promise = promise.catch(error);
 			}
 
@@ -83,11 +92,13 @@ const OpenLoopConnect = () => {
 		};
 
 	return {
+		getVersion: _getVersion,
 		getSyncPath: _syncPath.getValue,
 		setSyncPath: _syncPath.setValue,
 		setDefaultSyncPath: _syncPath.setDefault,
 		setDefaultConfigFile: _configFile.setDefault,
 		getFrameId: _frameId.getValue,
+		setDefaultFrameId: _frameId.setDefault,
 		isLive: _isLive.getValue,
 		isDebug: _isDebug.getValue,
 		feeds: _feeds,

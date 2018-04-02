@@ -13,6 +13,11 @@ openLoopConnect.feeds.assets.addDefaultFeed('cloudy')
 openLoopConnect.feeds.assets.addDefaultFeed('sunny')
 	.addItem('sunny.jpg')
 	.addItem('sunny.mp4');
+// set default texts
+openLoopConnect.feeds.freeTexts.addDefaultFeed('cloudy')
+	.addItem('Today is cloudy!');
+openLoopConnect.feeds.freeTexts.addDefaultFeed('sunny')
+	.addItem('Today is sunny!');
 // set default json feed
 openLoopConnect.feeds.json.addDefaultFeed('weather', {
 	panels: [
@@ -33,6 +38,7 @@ openLoopConnect.feeds.json.addDefaultFeed('weather', {
 
 let imageToDisplay;
 let videoToDisplay;
+let textToDisplay;
 const createElementWithText = function (element, text) {
 	var element = document.createElement(element);
 	var textNode = document.createTextNode(text);
@@ -63,15 +69,9 @@ openLoopConnect.load(function () {
 		let currentWeather = panelWeatherData.status;
 
 		// Your logic depending on feed data.
-		let assetsFeed;
-		switch (currentWeather) {
-			case 'cloudy':
-				assetsFeed = openLoopConnect.feeds.assets.getFeed('cloudy');
-				break;
-			case 'sunny':
-				assetsFeed = openLoopConnect.feeds.assets.getFeed('sunny');
-				break;
-		}
+		let assetsFeed = openLoopConnect.feeds.assets.getFeed(currentWeather);
+	    textToDisplay = openLoopConnect.feeds.freeTexts.getFeed(currentWeather)[0];
+
 		imageToDisplay = assetsFeed[0];
 		videoToDisplay = assetsFeed[1];
 	} catch (e) {
@@ -92,10 +92,12 @@ function fallBackToEmbeddedDefaults() {
 	createElementWithText('strong', 'Something failed, fallback to embedded defaults.');
 	imageToDisplay = 'blob:embeddedImage';
 	videoToDisplay = 'blob:embeddedVideo';
+	textToDisplay = 'embeddedText';
 }
 
 function renderContent() {
-	createElementWithText('h2', 'Example assets');
+	createElementWithText('h2', 'Example content');
+	createElementWithText('p', 'Text: ' + textToDisplay);
 	createElementWithText('p', 'Image: ' + imageToDisplay);
 	createElementWithText('p', 'Video: ' + videoToDisplay);
 }

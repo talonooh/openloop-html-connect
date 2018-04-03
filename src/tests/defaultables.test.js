@@ -138,6 +138,70 @@ describe('openLoopConnect defaultables', () => {
 			});
 		});
 
+		describe('getForceDefault', () => {
+			it('should return null if there is no default or real value', () => {
+				expect(openLoopConnect.getForceDefault()).toBeNull();
+			});
+
+			describe('when using setDefaultForceDefault', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultForceDefault(true);
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getForceDefault()).toBe(true);
+				});
+			});
+		});
+
+		describe('getWidth', () => {
+			it('should return null if there is no default or real value', () => {
+				expect(openLoopConnect.getWidth()).toBeNull();
+			});
+
+			describe('when using setDefaultWidth', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultWidth('800');
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getWidth()).toBe('800');
+				});
+			});
+		});
+
+		describe('getHeight', () => {
+			it('should return null if there is no default or real value', () => {
+				expect(openLoopConnect.getHeight()).toBeNull();
+			});
+
+			describe('when using setDefaultHeight', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultHeight('600');
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getHeight()).toBe('600');
+				});
+			});
+		});
+
+		describe('getBackgroundColor', () => {
+			it('should return null if there is no default or real value', () => {
+				expect(openLoopConnect.getBackgroundColor()).toBeNull();
+			});
+
+			describe('when using setDefaultBackgroundColor', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultBackgroundColor('#ffffff');
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getBackgroundColor()).toBe('#ffffff');
+				});
+			});
+		});
+
 		describe('isLive', () => {
 			it('should return false on local environment', () => {
 				expect(openLoopConnect.isLive()).toBeFalsy();

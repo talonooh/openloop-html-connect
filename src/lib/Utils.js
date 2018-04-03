@@ -30,9 +30,9 @@ export const isLive = () => {
  * @return { key, value } An object with key and value of the flag.
  */
 export const parseOpenLoopFlag = (flag) => {
-	const regex = RegExp(/^\{\{OPENLOOP-HTML-CONNECT:(\w+)=([\w.]+)\}\}$/);
+	const regex = RegExp(/^\{\{\{OPENLOOP-HTML-CONNECT:(\w+)=([\w.]+)\}\}\}$/);
 	const match = flag.match(regex);
-	if(match === null) {
+	if (match === null) {
 		return null;
 	}
 
@@ -40,6 +40,19 @@ export const parseOpenLoopFlag = (flag) => {
 		key: match[1],
 		value: match[2]
 	};
+}
+
+/**
+ * Defaultable accessor that automatically checks if the flag is setted.
+ * If it is setted returns the flag value, otherwise will return the default value.
+ * @param string flag
+ */
+export const accessorFromOpenLoopFlag = (flag) => defaultValue => {
+	if (flag.indexOf('OPENLOOP-HTML-CONNECT') === -1) {
+		return flag;
+	} else {
+		return defaultValue;
+	}
 }
 
 /**

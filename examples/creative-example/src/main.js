@@ -4,8 +4,12 @@ import openLoopConnect from 'openloop-html-connect';
 
 // -----------------------------------------------------
 // Defaults for local testing on dev environment:
-// set default sync path.
+// set defaultables.
 openLoopConnect.setDefaultSyncPath('c://myAssetsFolderOnDevEnvironment/');
+openLoopConnect.setDefaultForceDefault(false);
+openLoopConnect.setDefaultWidth('800');
+openLoopConnect.setDefaultHeight('600');
+openLoopConnect.setDefaultBackgroundColor('#000000');
 // set default assets (images and videos)
 openLoopConnect.feeds.assets.addDefaultFeed('cloudy')
 	.addItem('cloudy.jpg')
@@ -53,9 +57,14 @@ openLoopConnect.load(function () {
 	try {
 		createElementWithText('p', 'Current date: ' + moment().format());
 		createElementWithText('p', 'Sync path: ' + openLoopConnect.getSyncPath());
+		createElementWithText('p', 'IsConfigLoaded: ' + openLoopConnect.isConfigLoaded());
 		createElementWithText('p', 'Is Debug: ' + openLoopConnect.isDebug());
 		createElementWithText('p', 'Is Live: ' + openLoopConnect.isLive());
 		createElementWithText('p', 'FrameID: ' + openLoopConnect.getFrameId());
+		createElementWithText('p', 'ForceDefault flag: ' + openLoopConnect.getForceDefault());
+		createElementWithText('p', 'Width: ' + openLoopConnect.getWidth());
+		createElementWithText('p', 'Height: ' + openLoopConnect.getHeight());
+		createElementWithText('p', 'Background color: ' + openLoopConnect.getBackgroundColor());
 
 		// Your logic depending on frame_id and parsing of feed data.
 		// e.g. Feed with weather data associated to a frameId.

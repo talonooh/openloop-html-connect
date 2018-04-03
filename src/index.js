@@ -1,6 +1,11 @@
 require('es6-promise').polyfill();
 import Defaultable from 'lib/Defaultable';
-import { getQueryString, isLive, parseOpenLoopFlag } from 'lib/Utils';
+import {
+	getQueryString,
+	isLive,
+	parseOpenLoopFlag,
+	accessorFromOpenLoopFlag
+} from 'lib/Utils';
 import FeedsCollection from 'lib/FeedsCollection';
 import ArrayFeedsCollection from 'lib/ArrayFeedsCollection';
 import fetchJsonp from 'fetch-jsonp';
@@ -11,11 +16,16 @@ const OpenLoopConnect = () => {
 	// OpenLoopConnect HTML5 SDK Library.
 	var _openLoopSyncPath = '{{{OPENLOOP-HTML-CONNECT:SYNC-PATH}}}',
 		_openLoopConfigFile = '{{{OPENLOOP-HTML-CONNECT:CONFIG-FILE}}}',
-		_publisherVersion = '{{{OPENLOOP-HTML-CONNECT:PUBLISHER-VERSION}}}',
-		_version = '{{OPENLOOP-HTML-CONNECT:VERSION=' + OPENLOOP_HTML_CONNECT_VERSION + '}}',
+		_openLoopForceDefault = '{{{OPENLOOP-HTML-CONNECT:FORCE-DEFAULT}}}',
+		_openLoopWidth = '{{{OPENLOOP-HTML-CONNECT:WIDTH}}}',
+		_openLoopHeight = '{{{OPENLOOP-HTML-CONNECT:HEIGHT}}}',
+		_openLoopBackgroundColor = '{{{OPENLOOP-HTML-CONNECT:BG-COLOR}}}',
+		_openLoopLibraryVersion = '{{{OPENLOOP-HTML-CONNECT:VERSION=' + OPENLOOP_HTML_CONNECT_VERSION + '}}}',
+		_openLoopPublisherVersion = '{{{OPENLOOP-HTML-CONNECT:PUBLISHER-VERSION}}}',
 		_liveSyncPath = '../sync/',
+		_configLoaded = false,
 		_getVersion = () => {
-			return parseOpenLoopFlag(_version).value;
+			return parseOpenLoopFlag(_openLoopLibraryVersion).value;
 		},
 		_syncPath = new Defaultable('./', defaultValue => {
 			if (_openLoopSyncPath.indexOf('OPENLOOP-HTML-CONNECT') === -1) {
@@ -26,13 +36,11 @@ const OpenLoopConnect = () => {
 				return defaultValue;
 			}
 		}),
-		_configFile = new Defaultable(null, defaultValue => {
-			if (_openLoopConfigFile.indexOf('OPENLOOP-HTML-CONNECT') === -1) {
-				return _openLoopConfigFile;
-			} else {
-				return defaultValue;
-			}
-		}, true),
+		_configFile = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopConfigFile), true),
+		_forceDefault = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopForceDefault)),
+		_width = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopWidth)),
+		_height = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopHeight)),
+		_backgroundColor = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopBackgroundColor)),
 		_frameId = new Defaultable(null, defaultValue => {
 			let frameId = getQueryString('frame_id');
 			if (frameId === null) {
@@ -50,6 +58,7 @@ const OpenLoopConnect = () => {
 		}),
 		_isDebug = new Defaultable(false, () => (getQueryString('debug') !== null)),
 		_isLive = new Defaultable(false, isLive),
+		_isConfigLoaded = () => _configLoaded,
 		_feeds = {
 			assets: new ArrayFeedsCollection(_syncPath, item => item['image_src']),
 			freeTexts: new ArrayFeedsCollection(null, item => item['body']),
@@ -63,7 +72,8 @@ const OpenLoopConnect = () => {
 		_load = (success, error) => {
 			let promise = _configLoader
 				.load()
-				.then(() => {
+				.then(configLoaded => {
+					_configLoaded = configLoaded;
 					Defaultable.ready = true;
 				});
 
@@ -99,8 +109,17 @@ const OpenLoopConnect = () => {
 		setDefaultConfigFile: _configFile.setDefault,
 		getFrameId: _frameId.getValue,
 		setDefaultFrameId: _frameId.setDefault,
+		getForceDefault: _forceDefault.getValue,
+		setDefaultForceDefault: _forceDefault.setDefault,
+		getWidth: _width.getValue,
+		setDefaultWidth: _width.setDefault,
+		getHeight: _height.getValue,
+		setDefaultHeight: _height.setDefault,
+		getBackgroundColor: _backgroundColor.getValue,
+		setDefaultBackgroundColor: _backgroundColor.setDefault,
 		isLive: _isLive.getValue,
 		isDebug: _isDebug.getValue,
+		isConfigLoaded: _isConfigLoaded,
 		feeds: _feeds,
 		load: _load,
 		reset: _reset,

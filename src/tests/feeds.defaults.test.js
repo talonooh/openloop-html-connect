@@ -1,4 +1,6 @@
+const path = require('path');
 const openLoopConnect = require('../../');
+require('./utils/nodeFetch');
 
 describe('openLoopConnect.feeds using defaults', () => {
 	beforeEach(async () => {
@@ -118,6 +120,48 @@ describe('openLoopConnect.feeds using defaults', () => {
 				it('should return the value setted', () => {
 					expect(openLoopConnect.feeds.json.getFeed('weather').panels[0].status).toBe('cloudy');
 					expect(openLoopConnect.feeds.json.getFeed('traffic').panels[0].status).toBe('slow');
+				});
+			});
+
+			describe('and after using reset', () => {
+				beforeEach(() => {
+					openLoopConnect.reset()
+				});
+
+				it('should not let you access feeds before load', () => {
+					expect(() => {
+						openLoopConnect.feeds.json.getFeed('weather');
+					}).toThrowError(openLoopConnect.errors.InvalidOperationError);
+				});
+
+				describe('and after re-loading', () => {
+					beforeEach(async () => {
+						await openLoopConnect.load();
+					});
+
+					it('should not have values', () => {
+						expect(() => {
+							openLoopConnect.feeds.json.getFeed('weather');
+						}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
+					});
+				});
+			});
+		});
+
+		describe('when using addDefaultFeedFromFile', () => {
+			const filePath = (configFile) => path.resolve('src/tests/configs/' + configFile);
+
+			beforeEach(async () => {
+				openLoopConnect.feeds.json.addDefaultFeedFromFile('weather', filePath('sample.feed.json'));
+				await openLoopConnect.load();
+			});
+
+			describe('when using getFeed', () => {
+				it('should return the value setted', () => {
+					expect(openLoopConnect.feeds.json.getFeed('weather').panels[0].id).toBe(111);
+					expect(openLoopConnect.feeds.json.getFeed('weather').panels[0].status).toBe('sunny');
+					expect(openLoopConnect.feeds.json.getFeed('weather').panels[1].status).toBe('cloudy');
+					expect(openLoopConnect.feeds.json.getFeed('weather').panels[2].status).toBe('rain');
 				});
 			});
 

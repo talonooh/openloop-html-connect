@@ -5,6 +5,7 @@ import { ResourceNotFoundError } from './Errors';
 export default class FeedsCollection {
 	constructor() {
 		this.feedCollection = new Defaultable({});
+		this.defaultFeedsFromFiles = [];
 	}
 
 	setFeedsFromConfig(configData) {
@@ -16,7 +17,7 @@ export default class FeedsCollection {
 
 	getFeed(feedId) {
 		const feed = this.feedCollection.getValue()[feedId];
-		if(feed === undefined) {
+		if (feed === undefined) {
 			throw new ResourceNotFoundError('Feed id "' + feedId + '" was requested but not found.');
 			return null;
 		}
@@ -27,7 +28,26 @@ export default class FeedsCollection {
 		this.feedCollection.default[feedId] = feedData;
 	}
 
+	addDefaultFeedFromFile(feedId, filePath) {
+		this.defaultFeedsFromFiles.push({
+			id: feedId,
+			filePath
+		});
+	}
+
+	loadDefaultFeedsFromFiles() {
+		const promises = this.defaultFeedsFromFiles.map(fromConfig => {
+			return fetch(fromConfig.filePath)
+				.then(res => res.json())
+				.then(json => {
+					this.addDefaultFeed(fromConfig.id, json);
+				});
+		});
+		return Promise.all(promises);
+	}
+
 	reset() {
 		this.feedCollection.reset();
+		this.defaultFeedsFromFiles = [];
 	}
 }

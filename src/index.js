@@ -74,6 +74,11 @@ const OpenLoopConnect = () => {
 				.load()
 				.then(configLoaded => {
 					_configLoaded = configLoaded;
+					if(!configLoaded) {
+						return _feeds.json.loadDefaultFeedsFromFiles();
+					}
+				})
+				.then(() => {
 					Defaultable.ready = true;
 				});
 

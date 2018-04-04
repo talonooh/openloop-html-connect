@@ -23,6 +23,9 @@ openLoopConnect.feeds.freeTexts.addDefaultFeed('cloudy')
 openLoopConnect.feeds.freeTexts.addDefaultFeed('sunny')
 	.addItem('Today is sunny!');
 // set default json feed
+// By file:
+// openLoopConnect.feeds.json.addDefaultFeedFromFile('weather', '../sample.feed.json');
+// or by embedded json:
 openLoopConnect.feeds.json.addDefaultFeed('weather', {
 	panels: [
 		{ id: 123, status: 'cloudy' },

@@ -47,11 +47,11 @@ export const parseOpenLoopFlag = (flag) => {
  * If it is setted returns the flag value, otherwise will return the default value.
  * @param string flag
  */
-export const accessorFromOpenLoopFlag = (flag) => defaultValue => {
+export const accessorFromOpenLoopFlag = (flag, accessor = value => value, defaultAccessor = defaultValue => defaultValue) => defaultValue => {
 	if (flag.indexOf('OPENLOOP-HTML-CONNECT') === -1) {
-		return flag;
+		return accessor(flag);
 	} else {
-		return defaultValue;
+		return defaultAccessor(defaultValue);
 	}
 }
 

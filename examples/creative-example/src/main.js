@@ -5,6 +5,7 @@ import openLoopConnect from 'openloop-html-connect';
 // -----------------------------------------------------
 // Defaults for local testing on dev environment:
 // set defaultables.
+//openLoopConnect.setDefaultPlayCallback('BroadSignPlay');
 openLoopConnect.setDefaultSyncPath('c://myAssetsFolderOnDevEnvironment/');
 openLoopConnect.setDefaultForceDefault(false);
 openLoopConnect.setDefaultWidth('800');
@@ -91,14 +92,13 @@ openLoopConnect.load(function () {
 		// e.g.: Feed not found, frameId not found, panel not found, etc..
 		fallBackToEmbeddedDefaults();
 	}
-
-	renderContent();
 }, function (e) {
 	console.log(e);
 	// On error loading/parsing Config file.
 	fallBackToEmbeddedDefaults();
-	renderContent();
 });
+
+openLoopConnect.onPlay(renderContent);
 
 function fallBackToEmbeddedDefaults() {
 	createElementWithText('strong', 'Something failed, fallback to embedded defaults.');

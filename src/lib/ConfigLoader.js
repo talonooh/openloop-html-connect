@@ -25,7 +25,10 @@ export default class ConfigLoader {
 					reject('[OpenLoopHTMLConnect] [ConfigFile] Configuration JSON file setted but invalid or not found.');
 				});
 			} else {
-				resolve(false);
+				// force to go to next stack.
+				setTimeout(() => {
+					resolve(false);
+				}, 0);
 			}
 		});
 	}

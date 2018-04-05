@@ -1,12 +1,13 @@
 const path = require('path');
 const openLoopConnect = require('../../');
+require('./utils/nodeWindow');
 require('./utils/nodeJsonp');
 
 describe('using config files', () => {
 	const configPath = (configFile) => path.resolve('src/tests/configs/' + configFile);
 
 	beforeEach(() => {
-		global.window = {
+		window = {
 			location: {
 				href: ''
 			}

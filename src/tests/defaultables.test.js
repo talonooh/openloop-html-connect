@@ -1,5 +1,6 @@
 const openLoopConnect = require('../../');
 const packageJson = require('../../package.json');
+require('./utils/nodeWindow');
 
 describe('openLoopConnect defaultables', () => {
 	const sampleLiveCampaignUrl = 'https://stgdp.openloop.it/QDOT/UK/HTML5/DirectPanel/onetime/index.html';
@@ -16,7 +17,7 @@ describe('openLoopConnect defaultables', () => {
 
 	describe('when using them before load', () => {
 		beforeEach(() => {
-			global.window = {
+			window = {
 				location: {
 					href: ''
 				}
@@ -34,15 +35,15 @@ describe('openLoopConnect defaultables', () => {
 	});
 
 	describe('when using them after load', () => {
-		beforeEach(async () => {
-			global.window = {
+		beforeEach(async () => new Promise(resolve => {
+			window = {
 				location: {
 					href: ''
 				}
 			};
 			openLoopConnect.reset();
-			await openLoopConnect.load();
-		});
+			openLoopConnect.load(resolve);
+		}));
 
 		describe('getSyncPath', () => {
 			it('should return ./ by default', () => {
@@ -134,6 +135,18 @@ describe('openLoopConnect defaultables', () => {
 
 				it('should return correct value', () => {
 					expect(openLoopConnect.getFrameId()).toBe('123456789');
+				});
+			});
+
+			describe('when using BoardSignObject', () => {
+				beforeEach(() => {
+					window.BroadSignObject = {
+						frame_id: '999'
+					};
+				});
+
+				it('should return correct value', () => {
+					expect(openLoopConnect.getFrameId()).toBe('999');
 				});
 			});
 		});

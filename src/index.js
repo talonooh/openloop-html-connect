@@ -14,41 +14,46 @@ import errors, { ResourceNotFoundError } from 'lib/Errors';
 
 const OpenLoopConnect = () => {
 	// OpenLoopConnect HTML5 SDK Library.
-	var _openLoopSyncPath = '{{{OPENLOOP-HTML-CONNECT:SYNC-PATH}}}',
-		_openLoopConfigFile = '{{{OPENLOOP-HTML-CONNECT:CONFIG-FILE}}}',
-		_openLoopForceDefault = '{{{OPENLOOP-HTML-CONNECT:FORCE-DEFAULT}}}',
-		_openLoopWidth = '{{{OPENLOOP-HTML-CONNECT:WIDTH}}}',
-		_openLoopHeight = '{{{OPENLOOP-HTML-CONNECT:HEIGHT}}}',
-		_openLoopBackgroundColor = '{{{OPENLOOP-HTML-CONNECT:BG-COLOR}}}',
-		_openLoopLibraryVersion = '{{{OPENLOOP-HTML-CONNECT:VERSION=' + OPENLOOP_HTML_CONNECT_VERSION + '}}}',
-		_openLoopPublisherVersion = '{{{OPENLOOP-HTML-CONNECT:PUBLISHER-VERSION}}}',
+	var _openLoopLibraryVersion = '{{{OPENLOOP-HTML-CONNECT:VERSION=' + OPENLOOP_HTML_CONNECT_VERSION + '}}}',
 		_liveSyncPath = '../sync/',
+		// ConfigLoaded: True after real ol config is successfully loaded.
 		_configLoaded = false,
+		// True after load.
+		_readyToPlay = false,
+		// True after player calls the 'PlayCallback', otherwise always true.
+		_allowedToPlay = false,
+		_onPlayListener = () => { },
 		_getVersion = () => {
 			return parseOpenLoopFlag(_openLoopLibraryVersion).value;
 		},
-		_syncPath = new Defaultable('./', defaultValue => {
-			if (_openLoopSyncPath.indexOf('OPENLOOP-HTML-CONNECT') === -1) {
-				return _openLoopSyncPath;
-			} else if (_isLive.getValue()) {
+		_syncPath = new Defaultable('./', accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:SYNC-PATH}}}', value => value, defaultValue => {
+			if (_isLive.getValue()) {
 				return _liveSyncPath;
 			} else {
 				return defaultValue;
 			}
-		}),
-		_configFile = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopConfigFile), true),
-		_forceDefault = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopForceDefault)),
-		_width = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopWidth)),
-		_height = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopHeight)),
-		_backgroundColor = new Defaultable(null, accessorFromOpenLoopFlag(_openLoopBackgroundColor)),
+		})),
+		_configFile = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:CONFIG-FILE}}}'), true),
+		_playCallback = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:PLAY-CALLBACK}}}'), true),
+		_forceDefault = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:FORCE-DEFAULT}}}', value => value === 'true')),
+		_width = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:WIDTH}}}')),
+		_height = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:HEIGHT}}}')),
+		_backgroundColor = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:BG-COLOR}}}')),
 		_frameId = new Defaultable(null, defaultValue => {
-			let frameId = getQueryString('frame_id');
+			// Search for the frameId using sniffing approach.
+			let frameId = null;
+			if (typeof window.BroadSignObject !== 'undefined' && window.BroadSignObject.frame_id !== undefined) {
+				frameId = window.BroadSignObject.frame_id;
+			}
+			if (frameId === null) {
+				frameId = getQueryString('frame_id');
+			}
 			if (frameId === null) {
 				// If frame_id is not found, fallback to player_id.
 				frameId = getQueryString('player_id');
 			}
 			if (frameId === null) {
-				if(defaultValue !== null) {
+				if (defaultValue !== null) {
 					frameId = defaultValue;
 				} else {
 					throw new ResourceNotFoundError('Frame id requested but not found! Make sure to open this page with "?frame_id=[yourFrameId]" on the query string.');
@@ -74,7 +79,7 @@ const OpenLoopConnect = () => {
 				.load()
 				.then(configLoaded => {
 					_configLoaded = configLoaded;
-					if(!configLoaded) {
+					if (!configLoaded) {
 						return _feeds.json.loadDefaultFeedsFromFiles();
 					}
 				})
@@ -86,25 +91,69 @@ const OpenLoopConnect = () => {
 				promise = promise.then(success);
 			}
 
+			promise = promise.then(() => {
+				_readyToPlay = true;
+				_play();
+			});
+
 			if (error) {
 				promise = promise.catch(error);
 			}
-
-			return promise;
+		},
+		_onPlay = (listener) => {
+			_onPlayListener = listener;
+		},
+		_play = () => {
+			if (_readyToPlay && _allowedToPlay) {
+				_onPlayListener();
+			}
+		},
+		_setDefaultPlayCallback = (callbackName) => {
+			_playCallback.setDefault(callbackName);
+			_initializePlayCallback();
+		},
+		_initializePlayCallback = () => {
+			/**
+			 * Initialize library by setting from the begining the PlayCallback available on root scope.
+			 */
+			const playCallback = _playCallback.getValue();
+			if (playCallback !== null && playCallback !== '') {
+				_allowedToPlay = false;
+				if (window[playCallback] === undefined) {
+					window[playCallback] = () => {
+						_allowedToPlay = true;
+						_play();
+					};
+				}
+			} else {
+				_allowedToPlay = true;
+			}
 		},
 		_reset = function () {
 			// Just for testing purposes.
 			Defaultable.ready = false;
+			_configLoaded = false;
+			_readyToPlay = false;
+			_allowedToPlay = false;
+			_onPlayListener = () => { };
 			_syncPath.reset();
 			_configFile.reset();
-			_configLoader.reset();
+			_playCallback.reset();
+			_forceDefault.reset();
+			_width.reset();
+			_height.reset();
+			_backgroundColor.reset();
 			_frameId.reset();
 			_isDebug.reset();
 			_isLive.reset();
 			_feeds.assets.reset();
 			_feeds.freeTexts.reset();
 			_feeds.json.reset();
+			_configLoader.reset();
+			_initializePlayCallback();
 		};
+
+	_initializePlayCallback();
 
 	return {
 		getVersion: _getVersion,
@@ -122,11 +171,13 @@ const OpenLoopConnect = () => {
 		setDefaultHeight: _height.setDefault,
 		getBackgroundColor: _backgroundColor.getValue,
 		setDefaultBackgroundColor: _backgroundColor.setDefault,
+		setDefaultPlayCallback: _setDefaultPlayCallback,
 		isLive: _isLive.getValue,
 		isDebug: _isDebug.getValue,
 		isConfigLoaded: _isConfigLoaded,
 		feeds: _feeds,
 		load: _load,
+		onPlay: _onPlay,
 		reset: _reset,
 		errors
 	};

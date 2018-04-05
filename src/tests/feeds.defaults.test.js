@@ -1,17 +1,18 @@
 const path = require('path');
 const openLoopConnect = require('../../');
+require('./utils/nodeWindow');
 require('./utils/nodeFetch');
 
 describe('openLoopConnect.feeds using defaults', () => {
-	beforeEach(async () => {
-		global.window = {
+	beforeEach(async () => new Promise(resolve => {
+		window = {
 			location: {
 				href: ''
 			}
 		};
 		openLoopConnect.reset();
-		await openLoopConnect.load();
-	});
+		openLoopConnect.load(resolve);
+	}));
 
 	describe('feeds.assets', () => {
 		describe('when using addDefaultFeed', () => {
@@ -85,9 +86,9 @@ describe('openLoopConnect.feeds using defaults', () => {
 				});
 
 				describe('and after re-loading', () => {
-					beforeEach(async () => {
-						await openLoopConnect.load();
-					});
+					beforeEach(async () => new Promise(resolve => {
+						openLoopConnect.load(resolve);
+					}));
 
 					it('should not have values', () => {
 						expect(() => {
@@ -135,9 +136,9 @@ describe('openLoopConnect.feeds using defaults', () => {
 				});
 
 				describe('and after re-loading', () => {
-					beforeEach(async () => {
-						await openLoopConnect.load();
-					});
+					beforeEach(async () => new Promise(resolve => {
+						openLoopConnect.load(resolve);
+					}));
 
 					it('should not have values', () => {
 						expect(() => {
@@ -151,10 +152,10 @@ describe('openLoopConnect.feeds using defaults', () => {
 		describe('when using addDefaultFeedFromFile', () => {
 			const filePath = (configFile) => path.resolve('src/tests/configs/' + configFile);
 
-			beforeEach(async () => {
+			beforeEach(async () => new Promise(resolve => {
 				openLoopConnect.feeds.json.addDefaultFeedFromFile('weather', filePath('sample.feed.json'));
-				await openLoopConnect.load();
-			});
+				openLoopConnect.load(resolve);
+			}));
 
 			describe('when using getFeed', () => {
 				it('should return the value setted', () => {
@@ -177,9 +178,9 @@ describe('openLoopConnect.feeds using defaults', () => {
 				});
 
 				describe('and after re-loading', () => {
-					beforeEach(async () => {
-						await openLoopConnect.load();
-					});
+					beforeEach(async () => new Promise(resolve => {
+						openLoopConnect.load(resolve);
+					}));
 
 					it('should not have values', () => {
 						expect(() => {

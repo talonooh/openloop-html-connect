@@ -25,13 +25,13 @@ This library interface all you need for getting panel's information or campaign 
     - [getVersion()](#getversion)
     - [setDefaultConfigFile(filePath)](#setdefaultconfigfilefilepath)
     - [getForceDefault()](#getforcedefault)
-    - [setDefaultForceDefault()](#setdefaultforcedefault)
+    - [setDefaultForceDefault(forceDefault)](#setdefaultforcedefaultforcedefault)
     - [getWidth()](#getwidth)
-    - [setDefaultWidth()](#setdefaultwidth)
+    - [setDefaultWidth(width)](#setdefaultwidthwidth)
     - [getHeight()](#getheight)
-    - [setDefaultHeight()](#setdefaultheight)
+    - [setDefaultHeight(height)](#setdefaultheightheight)
     - [getBackgroundColor()](#getbackgroundcolor)
-    - [setDefaultBackgroundColor()](#setdefaultbackgroundcolor)
+    - [setDefaultBackgroundColor(bgColor)](#setdefaultbackgroundcolorbgcolor)
     - [feeds](#feeds)
         - [feeds.json](#feedsjson)
             - [feeds.json.getFeed(feedId)](#feedsjsongetfeedfeedid)
@@ -227,7 +227,7 @@ Returns a boolean which is the Force Default flag of the campaign defined on Ope
 
 This is a flag that can be easily setted on OpenLoop to switch the entire campaign for a default behaviour instanly.
 
-## setDefaultForceDefault()<span id="setdefaultforcedefault"></span>
+## setDefaultForceDefault(forceDefault)<span id="setdefaultforcedefaultforcedefault"></span>
 Sets the default value of the `getForceDefault`.
 
 ## getWidth()<span id="getwidth"></span>
@@ -235,7 +235,7 @@ Gets the panel's width in pixels.
 
 **Note:** This data is not available for all Formats, please contact us before use it for a specific campaign.
 
-## setDefaultWidth()<span id="setdefaultwidth"></span>
+## setDefaultWidth(width)<span id="setdefaultwidthwidth"></span>
 Sets the default value of the `getWidth`.
 
 ## getHeight()<span id="getheight"></span>
@@ -243,13 +243,13 @@ Gets the panel's height in pixels.
 
 **Note:** This data is not available for all Formats, please contact us before use it for a specific campaign.
 
-## setDefaultHeight()<span id="setdefaultheight"></span>
+## setDefaultHeight(height)<span id="setdefaultheightheight"></span>
 Sets the default value of the `getHeight`.
 
 ## getBackgroundColor()<span id="getbackgroundcolor"></span>
 Gets the panel's recommended background color in hexadecimal (like #000000).
 
-## setDefaultBackgroundColor()<span id="setdefaultbackgroundcolor"></span>
+## setDefaultBackgroundColor(bgColor)<span id="setdefaultbackgroundcolorbgcolor"></span>
 Sets the default value of the `getBackgroundColor`.
 
 ## feeds<span id="feeds"></span>
@@ -348,7 +348,7 @@ Thrown when:
 Thrown when any getter was called outside the sucess callback of the `.load` method.
 
 # Ajax calls<span id="ajax-calls"></span>
-We strongly disencourage the usage of ajax calls because they will not work on an offline panel. Internally the SDK and OpenLoop use JSONP (using script tags) to send data to the creative.
+We **strongly disencourage** the usage of ajax calls because they will not work on an offline panel. Internally the SDK and OpenLoop use JSONP (using script tags) to send data to the creative.
 
 If you want to attach API feeds (social network, traffic, weather, custom, etc..) so the creative can have that information, please add this feeds on the OpenLoop configuration and OpenLoop will make sure that the feeds will be attached to the **OpenLoop config file** and so the creative can load this data through this SDK library (see example above).
 

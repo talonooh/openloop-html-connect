@@ -1,4 +1,6 @@
 const openLoopConnect = require('../../');
+const packageJson = require('../../package.json');
+require('./utils/nodeWindow');
 
 describe('openLoopConnect defaultables', () => {
 	const sampleLiveCampaignUrl = 'https://stgdp.openloop.it/QDOT/UK/HTML5/DirectPanel/onetime/index.html';
@@ -7,9 +9,15 @@ describe('openLoopConnect defaultables', () => {
 		window.location.href = url;
 	};
 
+	describe('when using getVersion', () => {
+		it('should return package.json version', () => {
+			expect(openLoopConnect.getVersion()).toBe(packageJson.version);
+		});
+	});
+
 	describe('when using them before load', () => {
 		beforeEach(() => {
-			global.window = {
+			window = {
 				location: {
 					href: ''
 				}
@@ -27,15 +35,15 @@ describe('openLoopConnect defaultables', () => {
 	});
 
 	describe('when using them after load', () => {
-		beforeEach(async () => {
-			global.window = {
+		beforeEach(async () => new Promise(resolve => {
+			window = {
 				location: {
 					href: ''
 				}
 			};
 			openLoopConnect.reset();
-			await openLoopConnect.load();
-		});
+			openLoopConnect.load(resolve);
+		}));
 
 		describe('getSyncPath', () => {
 			it('should return ./ by default', () => {
@@ -90,6 +98,16 @@ describe('openLoopConnect defaultables', () => {
 				}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
 			});
 
+			describe('when using setDefaultFrameId', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultFrameId('456');
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getFrameId()).toBe('456');
+				});
+			});
+
 			describe('when using frame_id on the query string', () => {
 				beforeEach(() => {
 					setLocationHref(sampleLiveCampaignUrl + '?frame_id=12345');
@@ -97,6 +115,16 @@ describe('openLoopConnect defaultables', () => {
 
 				it('should return correct value', () => {
 					expect(openLoopConnect.getFrameId()).toBe('12345');
+				});
+
+				describe('and even when using setDefaultFrameId', () => {
+					beforeEach(() => {
+						openLoopConnect.setDefaultFrameId('456');
+					});
+
+					it('should still return query string value', () => {
+						expect(openLoopConnect.getFrameId()).toBe('12345');
+					});
 				});
 			});
 
@@ -107,6 +135,82 @@ describe('openLoopConnect defaultables', () => {
 
 				it('should return correct value', () => {
 					expect(openLoopConnect.getFrameId()).toBe('123456789');
+				});
+			});
+
+			describe('when using BoardSignObject', () => {
+				beforeEach(() => {
+					window.BroadSignObject = {
+						frame_id: '999'
+					};
+				});
+
+				it('should return correct value', () => {
+					expect(openLoopConnect.getFrameId()).toBe('999');
+				});
+			});
+		});
+
+		describe('getForceDefault', () => {
+			it('should return null if there is no default or real value', () => {
+				expect(openLoopConnect.getForceDefault()).toBeNull();
+			});
+
+			describe('when using setDefaultForceDefault', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultForceDefault(true);
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getForceDefault()).toBe(true);
+				});
+			});
+		});
+
+		describe('getWidth', () => {
+			it('should return null if there is no default or real value', () => {
+				expect(openLoopConnect.getWidth()).toBeNull();
+			});
+
+			describe('when using setDefaultWidth', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultWidth('800');
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getWidth()).toBe('800');
+				});
+			});
+		});
+
+		describe('getHeight', () => {
+			it('should return null if there is no default or real value', () => {
+				expect(openLoopConnect.getHeight()).toBeNull();
+			});
+
+			describe('when using setDefaultHeight', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultHeight('600');
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getHeight()).toBe('600');
+				});
+			});
+		});
+
+		describe('getBackgroundColor', () => {
+			it('should return null if there is no default or real value', () => {
+				expect(openLoopConnect.getBackgroundColor()).toBeNull();
+			});
+
+			describe('when using setDefaultBackgroundColor', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultBackgroundColor('#ffffff');
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getBackgroundColor()).toBe('#ffffff');
 				});
 			});
 		});

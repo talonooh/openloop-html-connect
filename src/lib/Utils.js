@@ -25,6 +25,37 @@ export const isLive = () => {
 };
 
 /**
+ * A util that parses key and value of an OpenLoop flag e.g.: {{OPENLOOP-HTML-CONNECT:VERSION=1.0.0}}
+ * @param string flag
+ * @return { key, value } An object with key and value of the flag.
+ */
+export const parseOpenLoopFlag = (flag) => {
+	const regex = RegExp(/^\{\{\{OPENLOOP-HTML-CONNECT:(\w+)=([\w.]+)\}\}\}$/);
+	const match = flag.match(regex);
+	if (match === null) {
+		return null;
+	}
+
+	return {
+		key: match[1],
+		value: match[2]
+	};
+}
+
+/**
+ * Defaultable accessor that automatically checks if the flag is setted.
+ * If it is setted returns the flag value, otherwise will return the default value.
+ * @param string flag
+ */
+export const accessorFromOpenLoopFlag = (flag, accessor = value => value, defaultAccessor = defaultValue => defaultValue) => defaultValue => {
+	if (flag.indexOf('OPENLOOP-HTML-CONNECT') === -1) {
+		return accessor(flag);
+	} else {
+		return defaultAccessor(defaultValue);
+	}
+}
+
+/**
  * OpenLoop config may contain array feeds or single item feeds.
  * The XML to JSON may change the structure of the resulting JSON
  * depending if the element contains multiple or single children.
@@ -41,12 +72,12 @@ export const readJSONPCollection = (configArrayData, itemMapper = null) => {
 		if (Array.isArray(configArrayData)) {
 			configArrayData.forEach(item => {
 				const id = item['@id'];
-				data[id] = (itemMapper) ? itemMapper(item) : item;
+				data[id] = (itemMapper) ? itemMapper(item) : item.data;
 			});
 		} else if (typeof configArrayData === 'object') {
 			const item = configArrayData;
 			const id = item['@id'];
-			data[id] = (itemMapper) ? itemMapper(item) : item;
+			data[id] = (itemMapper) ? itemMapper(item) : item.data;
 		}
 	}
 	return data;
@@ -63,11 +94,11 @@ export const readJSONPArray = (configArrayData, itemMapper = null) => {
 	if (configArrayData) {
 		if (Array.isArray(configArrayData)) {
 			configArrayData.forEach(item => {
-				const newItem = (itemMapper) ? itemMapper(item) : item;
+				const newItem = (itemMapper) ? itemMapper(item) : item.data;
 				data.push(newItem);
 			});
 		} else if (typeof configArrayData === 'object') {
-			const newItem = (itemMapper) ? itemMapper(configArrayData) : configArrayData;
+			const newItem = (itemMapper) ? itemMapper(configArrayData) : configArrayData.data;
 			data.push(newItem);
 		}
 	}

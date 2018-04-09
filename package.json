@@ -1,11 +1,12 @@
 {
   "name": "openloop-html-connect",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "HTML5 SDK for connecting OpenLoop with HTML Creatives with interfaces to simplify Media Owner integration for DOOH Dynamic Campaigns.",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "test": "npm run build && jest --env=node --verbose"
+    "test": "npm run build && jest --env=node --verbose",
+    "readme": "md-toc docs/README.md > README.md"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "babel-preset-es2015-ie": "^6.7.0",
     "jest": "^22.1.1",
     "jsonp-node": "0.0.6",
+    "md-toc": "^1.0.0",
     "uglify-js": "^3.3.7",
     "webpack": "^4.0.1",
     "webpack-cli": "^2.0.9"

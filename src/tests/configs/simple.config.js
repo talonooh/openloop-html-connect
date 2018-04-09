@@ -27,21 +27,23 @@ openLoopConfig({
 			"data": {
 				"@id": "weather",
 				"@timestamp": "1518816947",
-				"regions": {
-					"region": [
-						{
-							"@id": "London",
-							"@condition": "3"
-						},
-						{
-							"@id": "Meridian",
-							"@condition": "4"
-						},
-						{
-							"@id": "Yorkshire",
-							"@condition": "2"
-						}
-					]
+				"data": {
+					"regions": {
+						"region": [
+							{
+								"@id": "London",
+								"@condition": "3"
+							},
+							{
+								"@id": "Meridian",
+								"@condition": "4"
+							},
+							{
+								"@id": "Yorkshire",
+								"@condition": "2"
+							}
+						]
+					}
 				}
 			}
 		}

@@ -4,8 +4,13 @@ import openLoopConnect from 'openloop-html-connect';
 
 // -----------------------------------------------------
 // Defaults for local testing on dev environment:
-// set default sync path.
+// set defaultables.
+//openLoopConnect.setDefaultPlayCallback('BroadSignPlay');
 openLoopConnect.setDefaultSyncPath('c://myAssetsFolderOnDevEnvironment/');
+openLoopConnect.setDefaultForceDefault(false);
+openLoopConnect.setDefaultWidth('800');
+openLoopConnect.setDefaultHeight('600');
+openLoopConnect.setDefaultBackgroundColor('#000000');
 // set default assets (images and videos)
 openLoopConnect.feeds.assets.addDefaultFeed('cloudy')
 	.addItem('cloudy.jpg')
@@ -13,7 +18,15 @@ openLoopConnect.feeds.assets.addDefaultFeed('cloudy')
 openLoopConnect.feeds.assets.addDefaultFeed('sunny')
 	.addItem('sunny.jpg')
 	.addItem('sunny.mp4');
+// set default texts
+openLoopConnect.feeds.freeTexts.addDefaultFeed('cloudy')
+	.addItem('Today is cloudy!');
+openLoopConnect.feeds.freeTexts.addDefaultFeed('sunny')
+	.addItem('Today is sunny!');
 // set default json feed
+// By file:
+// openLoopConnect.feeds.json.addDefaultFeedFromFile('weather', '../sample.feed.json');
+// or by embedded json:
 openLoopConnect.feeds.json.addDefaultFeed('weather', {
 	panels: [
 		{ id: 123, status: 'cloudy' },
@@ -33,6 +46,7 @@ openLoopConnect.feeds.json.addDefaultFeed('weather', {
 
 let imageToDisplay;
 let videoToDisplay;
+let textToDisplay;
 const createElementWithText = function (element, text) {
 	var element = document.createElement(element);
 	var textNode = document.createTextNode(text);
@@ -47,9 +61,14 @@ openLoopConnect.load(function () {
 	try {
 		createElementWithText('p', 'Current date: ' + moment().format());
 		createElementWithText('p', 'Sync path: ' + openLoopConnect.getSyncPath());
+		createElementWithText('p', 'IsConfigLoaded: ' + openLoopConnect.isConfigLoaded());
 		createElementWithText('p', 'Is Debug: ' + openLoopConnect.isDebug());
 		createElementWithText('p', 'Is Live: ' + openLoopConnect.isLive());
 		createElementWithText('p', 'FrameID: ' + openLoopConnect.getFrameId());
+		createElementWithText('p', 'ForceDefault flag: ' + openLoopConnect.getForceDefault());
+		createElementWithText('p', 'Width: ' + openLoopConnect.getWidth());
+		createElementWithText('p', 'Height: ' + openLoopConnect.getHeight());
+		createElementWithText('p', 'Background color: ' + openLoopConnect.getBackgroundColor());
 
 		// Your logic depending on frame_id and parsing of feed data.
 		// e.g. Feed with weather data associated to a frameId.
@@ -63,15 +82,9 @@ openLoopConnect.load(function () {
 		let currentWeather = panelWeatherData.status;
 
 		// Your logic depending on feed data.
-		let assetsFeed;
-		switch (currentWeather) {
-			case 'cloudy':
-				assetsFeed = openLoopConnect.feeds.assets.getFeed('cloudy');
-				break;
-			case 'sunny':
-				assetsFeed = openLoopConnect.feeds.assets.getFeed('sunny');
-				break;
-		}
+		let assetsFeed = openLoopConnect.feeds.assets.getFeed(currentWeather);
+	    textToDisplay = openLoopConnect.feeds.freeTexts.getFeed(currentWeather)[0];
+
 		imageToDisplay = assetsFeed[0];
 		videoToDisplay = assetsFeed[1];
 	} catch (e) {
@@ -79,23 +92,24 @@ openLoopConnect.load(function () {
 		// e.g.: Feed not found, frameId not found, panel not found, etc..
 		fallBackToEmbeddedDefaults();
 	}
-
-	renderContent();
 }, function (e) {
 	console.log(e);
 	// On error loading/parsing Config file.
 	fallBackToEmbeddedDefaults();
-	renderContent();
 });
+
+openLoopConnect.onPlay(renderContent);
 
 function fallBackToEmbeddedDefaults() {
 	createElementWithText('strong', 'Something failed, fallback to embedded defaults.');
 	imageToDisplay = 'blob:embeddedImage';
 	videoToDisplay = 'blob:embeddedVideo';
+	textToDisplay = 'embeddedText';
 }
 
 function renderContent() {
-	createElementWithText('h2', 'Example assets');
+	createElementWithText('h2', 'Example content');
+	createElementWithText('p', 'Text: ' + textToDisplay);
 	createElementWithText('p', 'Image: ' + imageToDisplay);
 	createElementWithText('p', 'Video: ' + videoToDisplay);
 }

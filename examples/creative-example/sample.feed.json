@@ -1,0 +1,16 @@
+{
+	"panels": [
+		{
+			"id": 111,
+			"status": "sunny"
+		},
+		{
+			"id": 222,
+			"status": "cloudy"
+		},
+		{
+			"id": 333,
+			"status": "rain"
+		}
+	]
+}

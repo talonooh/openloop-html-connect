@@ -49,26 +49,52 @@ openLoopConfig({
 				}
 			]
 		},
+		"free_text": {
+			"data": [
+				{
+					"@id": "cloudy",
+					"@timestamp": "1520015719",
+					"item": [
+						{
+							"@id": "0",
+							"body": "Too many clouds today!"
+						}
+					]
+				},
+				{
+					"@id": "sunny",
+					"@timestamp": "1520015719",
+					"item": [
+						{
+							"@id": "0",
+							"body": "You should wear sunglasses today"
+						}
+					]
+				}
+			]
+		},
 		"rss": null,
 		"xml": null,
 		"json": {
 			"data": {
 				"@id": "weather",
 				"@timestamp": "1518816947",
-				"panels": [
-					{
-						"id": 123,
-						"status": "sunny"
-					},
-					{
-						"id": 456,
-						"status": "cloudy"
-					},
-					{
-						"id": 789,
-						"status": "cloudy"
-					}
-				]
+				"data": {
+					"panels": [
+						{
+							"id": 123,
+							"status": "sunny"
+						},
+						{
+							"id": 456,
+							"status": "cloudy"
+						},
+						{
+							"id": 789,
+							"status": "cloudy"
+						}
+					]
+				}
 			}
 		}
 	}

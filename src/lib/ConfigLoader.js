@@ -20,12 +20,15 @@ export default class ConfigLoader {
 				jsonpLoader(configFile)
 				.then(json => {
 					this.accessor(json);
-					resolve();
+					resolve(true);
 				}).catch(ex => {
 					reject('[OpenLoopHTMLConnect] [ConfigFile] Configuration JSON file setted but invalid or not found.');
 				});
 			} else {
-				resolve();
+				// force to go to next stack.
+				setTimeout(() => {
+					resolve(false);
+				}, 0);
 			}
 		});
 	}

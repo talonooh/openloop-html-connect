@@ -1,12 +1,13 @@
 const path = require('path');
 const openLoopConnect = require('../../');
-require('./nodeJsonp');
+require('./utils/nodeWindow');
+require('./utils/nodeJsonp');
 
-describe('openLoopConnect.feeds using config file', () => {
+describe('using config files', () => {
 	const configPath = (configFile) => path.resolve('src/tests/configs/' + configFile);
 
 	beforeEach(() => {
-		global.window = {
+		window = {
 			location: {
 				href: ''
 			}
@@ -15,7 +16,24 @@ describe('openLoopConnect.feeds using config file', () => {
 		openLoopConnect.setDefaultSyncPath('./');
 	});
 
-	describe('when setting defaults but then loading a simple config file', () => {
+	describe('before loading a config file', () => {
+		it('isConfigLoaded should be false', () => {
+			expect(openLoopConnect.isConfigLoaded()).toBeFalsy();
+		});
+	});
+
+	describe('after loading a config file', () => {
+		beforeEach(async () => new Promise(resolve => {
+			openLoopConnect.setDefaultConfigFile(configPath('simple.config.js'));
+			openLoopConnect.load(resolve);
+		}));
+
+		it('isConfigLoaded should be true', () => {
+			expect(openLoopConnect.isConfigLoaded()).toBeTruthy();
+		});
+	});
+
+	describe('when setting default feeds but then loading a simple config file', () => {
 		beforeEach(async () => new Promise(resolve => {
 			openLoopConnect.feeds.assets.addDefaultFeed('cloudy')
 				.addItem('cloudy.jpg')

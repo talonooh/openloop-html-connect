@@ -1,15 +1,18 @@
+const path = require('path');
 const openLoopConnect = require('../../');
+require('./utils/nodeWindow');
+require('./utils/nodeFetch');
 
 describe('openLoopConnect.feeds using defaults', () => {
-	beforeEach(async () => {
-		global.window = {
+	beforeEach(async () => new Promise(resolve => {
+		window = {
 			location: {
 				href: ''
 			}
 		};
 		openLoopConnect.reset();
-		await openLoopConnect.load();
-	});
+		openLoopConnect.load(resolve);
+	}));
 
 	describe('feeds.assets', () => {
 		describe('when using addDefaultFeed', () => {
@@ -83,9 +86,9 @@ describe('openLoopConnect.feeds using defaults', () => {
 				});
 
 				describe('and after re-loading', () => {
-					beforeEach(async () => {
-						await openLoopConnect.load();
-					});
+					beforeEach(async () => new Promise(resolve => {
+						openLoopConnect.load(resolve);
+					}));
 
 					it('should not have values', () => {
 						expect(() => {
@@ -133,9 +136,51 @@ describe('openLoopConnect.feeds using defaults', () => {
 				});
 
 				describe('and after re-loading', () => {
-					beforeEach(async () => {
-						await openLoopConnect.load();
+					beforeEach(async () => new Promise(resolve => {
+						openLoopConnect.load(resolve);
+					}));
+
+					it('should not have values', () => {
+						expect(() => {
+							openLoopConnect.feeds.json.getFeed('weather');
+						}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
 					});
+				});
+			});
+		});
+
+		describe('when using addDefaultFeedFromFile', () => {
+			const filePath = (configFile) => path.resolve('src/tests/configs/' + configFile);
+
+			beforeEach(async () => new Promise(resolve => {
+				openLoopConnect.feeds.json.addDefaultFeedFromFile('weather', filePath('sample.feed.json'));
+				openLoopConnect.load(resolve);
+			}));
+
+			describe('when using getFeed', () => {
+				it('should return the value setted', () => {
+					expect(openLoopConnect.feeds.json.getFeed('weather').panels[0].id).toBe(111);
+					expect(openLoopConnect.feeds.json.getFeed('weather').panels[0].status).toBe('sunny');
+					expect(openLoopConnect.feeds.json.getFeed('weather').panels[1].status).toBe('cloudy');
+					expect(openLoopConnect.feeds.json.getFeed('weather').panels[2].status).toBe('rain');
+				});
+			});
+
+			describe('and after using reset', () => {
+				beforeEach(() => {
+					openLoopConnect.reset()
+				});
+
+				it('should not let you access feeds before load', () => {
+					expect(() => {
+						openLoopConnect.feeds.json.getFeed('weather');
+					}).toThrowError(openLoopConnect.errors.InvalidOperationError);
+				});
+
+				describe('and after re-loading', () => {
+					beforeEach(async () => new Promise(resolve => {
+						openLoopConnect.load(resolve);
+					}));
 
 					it('should not have values', () => {
 						expect(() => {

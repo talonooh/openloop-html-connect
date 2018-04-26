@@ -182,7 +182,7 @@ Returns a boolean which is the Force Default flag of the campaign defined on Ope
 
 This is a flag that can be easily setted on OpenLoop to switch the entire campaign for a default behaviour instanly.
 
-## setDefaultForceDefault()
+## setDefaultForceDefault(forceDefault)
 Sets the default value of the `getForceDefault`.
 
 ## getWidth()
@@ -190,7 +190,7 @@ Gets the panel's width in pixels.
 
 **Note:** This data is not available for all Formats, please contact us before use it for a specific campaign.
 
-## setDefaultWidth()
+## setDefaultWidth(width)
 Sets the default value of the `getWidth`.
 
 ## getHeight()
@@ -198,13 +198,13 @@ Gets the panel's height in pixels.
 
 **Note:** This data is not available for all Formats, please contact us before use it for a specific campaign.
 
-## setDefaultHeight()
+## setDefaultHeight(height)
 Sets the default value of the `getHeight`.
 
 ## getBackgroundColor()
 Gets the panel's recommended background color in hexadecimal (like #000000).
 
-## setDefaultBackgroundColor()
+## setDefaultBackgroundColor(bgColor)
 Sets the default value of the `getBackgroundColor`.
 
 ## feeds

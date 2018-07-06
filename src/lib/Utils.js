@@ -112,7 +112,8 @@ export const readJSONPArray = (configArrayData, itemMapper = null) => {
  */
 const webJsonpLoader = (url) => {
 	return fetchJsonp(url, {
-		jsonpCallbackFunction: 'openLoopConfig'
+		jsonpCallbackFunction: 'openLoopConfig',
+		timeout: 2000,
 	}).then(function (response) {
 		return response.json();
 	});
@@ -135,4 +136,7 @@ const nodeJsonpLoader = (url) => {
  * @param {*} url
  * @return {*} Parsed JSON object.
  */
-export const jsonpLoader = (typeof document === 'undefined') ? nodeJsonpLoader : webJsonpLoader;
+export const jsonpLoader = (url) => {
+	var loader = (typeof global !== 'undefined' && typeof global.nodeJsonp !== 'undefined') ? global.nodeJsonp : webJsonpLoader;
+	return loader(url);
+};

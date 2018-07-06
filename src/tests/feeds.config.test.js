@@ -183,4 +183,26 @@ describe('using config files', () => {
 			});
 		});
 	});
+
+	describe('when loading a config with showDefault = "true" ', () => {
+		beforeEach(async () => new Promise(resolve => {
+			openLoopConnect.setDefaultConfigFile(configPath('forceDefaultTrue.config.js'));
+			openLoopConnect.load(resolve);
+		}));
+
+		it('getForceDefault() should return true', () => {
+			expect(openLoopConnect.getForceDefault()).toEqual(true);
+		})
+	});
+
+	describe('when loading a config with showDefault = "false" ', () => {
+		beforeEach(async () => new Promise(resolve => {
+			openLoopConnect.setDefaultConfigFile(configPath('simple.config.js'));
+			openLoopConnect.load(resolve);
+		}));
+
+		it('getForceDefault() should return true', () => {
+			expect(openLoopConnect.getForceDefault()).toEqual(false);
+		})
+	});
 });

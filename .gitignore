@@ -3,3 +3,5 @@ npm-debug.log
 
 # Optional npm cache directory
 .npm
+
+index.js

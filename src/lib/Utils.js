@@ -1,5 +1,6 @@
 import fetchJsonp from 'fetch-jsonp';
 
+const WEBJSONP_TIMEOUT = 2000;
 /**
  * Searches for a field on the given URL or on the browser's nav bar URL (default).
  * If the fields is found, it returns the value, else will return null.
@@ -113,7 +114,7 @@ export const readJSONPArray = (configArrayData, itemMapper = null) => {
 const webJsonpLoader = (url) => {
 	return fetchJsonp(url, {
 		jsonpCallbackFunction: 'openLoopConfig',
-		timeout: 2000,
+		timeout: WEBJSONP_TIMEOUT,
 	}).then(function (response) {
 		return response.json();
 	});

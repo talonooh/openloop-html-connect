@@ -34,7 +34,6 @@ export default class Defaultable {
 				this.setValue(this.default);
 			}
 		}
-
 		return this.value;
 	}
 

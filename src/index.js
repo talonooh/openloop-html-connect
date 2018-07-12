@@ -36,9 +36,9 @@ const OpenLoopConnect = () => {
 		_configFile = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:CONFIG-FILE}}}'), true),
 		_playCallback = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:PLAY-CALLBACK}}}'), true),
 		_forceDefault = new Defaultable(null, null, false),
-		_width = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:WIDTH}}}')),
-		_height = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:HEIGHT}}}')),
-		_backgroundColor = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:BG-COLOR}}}')),
+		_width = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:WIDTH}}}'), true),
+		_height = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:HEIGHT}}}'), true),
+		_backgroundColor = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:BG-COLOR}}}'), true),
 		_frameId = new Defaultable(null, defaultValue => {
 			// Search for the frameId using sniffing approach.
 			let frameId = null;

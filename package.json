@@ -1,6 +1,6 @@
 {
   "name": "openloop-html-connect",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "HTML5 SDK for connecting OpenLoop with HTML Creatives with interfaces to simplify Media Owner integration for DOOH Dynamic Campaigns.",
   "main": "index.js",
   "scripts": {

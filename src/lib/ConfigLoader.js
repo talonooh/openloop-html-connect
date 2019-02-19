@@ -1,4 +1,5 @@
 import { jsonpLoader } from 'lib/Utils';
+import { ConfigFileNotFoundError } from './Errors';
 
 export default class ConfigLoader {
 	constructor(configFile, accessor) {
@@ -18,12 +19,12 @@ export default class ConfigLoader {
 			const configFile = this.configFile.getValue();
 			if (configFile !== null) {
 				jsonpLoader(configFile)
-				.then(json => {
-					this.accessor(json);
-					resolve(true);
-				}).catch(ex => {
-					reject('[OpenLoopHTMLConnect] [ConfigFile] Configuration JSON file setted but invalid or not found.');
-				});
+					.then(json => {
+						this.accessor(json);
+						resolve(true);
+					}).catch(ex => {
+						reject(new ConfigFileNotFoundError(ex.message));
+					});
 			} else {
 				// force to go to next stack.
 				setTimeout(() => {

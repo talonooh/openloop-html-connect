@@ -21,8 +21,15 @@ export class InvalidOperationError extends OpenLoopHTMLConnectError {
 	}
 }
 
+export class ConfigFileNotFoundError extends OpenLoopHTMLConnectError {
+	constructor(message) {
+		super('[ConfigFileNotFoundError] ' + message);
+	}
+}
+
 export default {
 	OpenLoopHTMLConnectError,
 	ResourceNotFoundError,
-	InvalidOperationError
+	InvalidOperationError,
+	ConfigFileNotFoundError
 };

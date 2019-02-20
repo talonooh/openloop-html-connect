@@ -1,6 +1,14 @@
 {
 	"presets": [
-		"es2015-ie"
+		[
+			"@babel/preset-env",
+			{
+				"targets": {
+					"ie": 9
+				},
+				"useBuiltIns": "usage"
+			}
+		]
 	],
 	"plugins": [
 		[

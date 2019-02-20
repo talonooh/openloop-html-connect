@@ -35,10 +35,10 @@ const OpenLoopConnect = () => {
 		})),
 		_configFile = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:CONFIG-FILE}}}'), true),
 		_playCallback = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:PLAY-CALLBACK}}}'), true),
-		_forceDefault = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:FORCE-DEFAULT}}}', value => value === 'true')),
-		_width = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:WIDTH}}}')),
-		_height = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:HEIGHT}}}')),
-		_backgroundColor = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:BG-COLOR}}}')),
+		_forceDefault = new Defaultable(null, null, false),
+		_width = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:WIDTH}}}'), true),
+		_height = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:HEIGHT}}}'), true),
+		_backgroundColor = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:BG-COLOR}}}'), true),
 		_frameId = new Defaultable(null, defaultValue => {
 			// Search for the frameId using sniffing approach.
 			let frameId = null;
@@ -70,6 +70,7 @@ const OpenLoopConnect = () => {
 			json: new FeedsCollection()
 		},
 		_configLoader = new ConfigLoader(_configFile, configData => {
+			_forceDefault.setValue(configData.openLoopConfig.config.showDefault === "true");
 			_feeds.assets.setFeedsFromConfig(configData.openLoopConfig.images);
 			_feeds.freeTexts.setFeedsFromConfig(configData.openLoopConfig['free_text']);
 			_feeds.json.setFeedsFromConfig(configData.openLoopConfig.json);

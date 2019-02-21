@@ -151,7 +151,7 @@ Use it with the `success` and `error` callbacks parameters. Promises are allowed
 - `success` - Called if:
 	- OpenLoop config file was loaded successfully
 	- Config file is not setted so the library successfully fallbacks to the setted defaults.
-- `error` - Called if the config file couldn't be found or properly parsed. It returns a `ConfigFileNotFoundError`
+- `error` - Called if the config file couldn't be found or properly parsed. It returns a `ConfigFileNotFoundError` (from 1.5.0 onwards, it used to return a string);
 
 Using **getters** inside the `success` is **mandatory** and we strongly recommend using the `error` callback to fallback to your own defaulting strategy (see example above).
 

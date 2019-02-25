@@ -146,12 +146,12 @@ openLoopConnect.onPlay(() => {
 # API<span id="api"></span>
 
 ## load(success, error)<span id="loadsuccess-error"></span>
-Use it with the `success` and `error` callbacks parameters.
+Use it with the `success` and `error` callbacks parameters. Promises are allowed as return values.
 
 - `success` - Called if:
 	- OpenLoop config file was loaded successfully
 	- Config file is not setted so the library successfully fallbacks to the setted defaults.
-- `error` - Called if OpenLoop sets that a config file needs to be loaded but the library failed to load or parse the config file.
+- `error` - Called if the config file couldn't be found or properly parsed. It returns a `ConfigFileNotFoundError` (from 1.5.0 onwards, it used to return a string);
 
 Using **getters** inside the `success` is **mandatory** and we strongly recommend using the `error` callback to fallback to your own defaulting strategy (see example above).
 

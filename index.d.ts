@@ -4,10 +4,16 @@ declare module 'openloop-html-connect' {
 		getItems: () => Array<string>;
 	}
 
-	export class ArrayFeedCollection {
-		getFeed: (feedId: string) => Array<ArrayFeed>;
-		addDefaultFeed: (feedId: string) => ArrayFeed; // actually returns newFeed
+	export class ArrayFeedCollection extends FeedsCollection {
+	}
+
+	export class FeedsCollection {
 		setFeedsFromConfig: (configData: JSON | XMLDocument) => void;
+		getFeed: (feedId: string) => Array<ArrayFeed>;
+		addDefaultFeed: (feedId: string) => ArrayFeed;
+		addDefaultFeedFromFile: (feedId: string, filePath: string) => void;
+		loadDefaultFeedsFromFiles: () => Promise<unknown>;
+		reset: () => void;
 	}
 
 	export const getVersion: () => string;
@@ -34,6 +40,8 @@ declare module 'openloop-html-connect' {
 	export const play: () => void;
 	export const reset: () => void;
 	export const feeds: {
-		assets: ArrayFeedCollection
+		assets: ArrayFeedCollection;
+		freeTexts: ArrayFeedCollection;
+		json: FeedsCollection
 	}
 }

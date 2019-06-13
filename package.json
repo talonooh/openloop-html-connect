@@ -30,12 +30,12 @@
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015-ie": "^6.7.0",
-    "jest": "^22.1.1",
+    "jest": "^24.8.0",
     "jsonp-node": "0.0.6",
     "md-toc": "^1.0.0",
     "uglify-js": "^3.3.7",
     "webpack": "^4.0.1",
-    "webpack-cli": "^2.0.9"
+    "webpack-cli": "^3.3.4"
   },
   "dependencies": {
     "@babel/core": "^7.3.3",

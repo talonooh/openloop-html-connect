@@ -45,7 +45,9 @@ declare module 'openloop-html-connect' {
 		assets: ArrayFeedCollection;
 		freeTexts: ArrayFeedCollection;
 		json: FeedsCollection
-	}
+	};
+	export const setDefaultLastPublishedDate: (timestamp: number) => void;
+	export const getLastPublishedDate: () => number;
 	export const scalaLib: {
 		inScala: () => boolean;
 		getMetadataValue: (value: string) => string;

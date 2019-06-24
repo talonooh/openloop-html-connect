@@ -63,7 +63,7 @@ const OpenLoopConnect = () => {
 			}
 			return frameId;
 		}),
-		_lastPublishedDate = new Defaultable(new Date('2000-10-10')),
+		_lastPublishedDate = new Defaultable(new Date('2000-10-10').getTime()),
 		_isDebug = new Defaultable(false, () => (getQueryString('debug') !== null)),
 		_isLive = new Defaultable(false, isLive),
 		_isConfigLoaded = () => _configLoaded,

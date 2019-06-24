@@ -5,12 +5,14 @@ declare module 'openloop-html-connect' {
 	}
 
 	export class ArrayFeedCollection extends FeedsCollection {
+		addDefaultFeed: (feedId: string) => ArrayFeed;
+		getFeed: (feedId: string) => Array<string>;
 	}
 
 	export class FeedsCollection {
 		setFeedsFromConfig: (configData: JSON | XMLDocument) => void;
-		getFeed: (feedId: string) => Array<ArrayFeed>;
-		addDefaultFeed: (feedId: string) => ArrayFeed;
+		getFeed: (feedId: string) => Array<ArrayFeed> | Array<string>;
+		addDefaultFeed: (feedId: string, feedData: any) => ArrayFeed;
 		addDefaultFeedFromFile: (feedId: string, filePath: string) => void;
 		loadDefaultFeedsFromFiles: () => Promise<unknown>;
 		reset: () => void;
@@ -43,5 +45,10 @@ declare module 'openloop-html-connect' {
 		assets: ArrayFeedCollection;
 		freeTexts: ArrayFeedCollection;
 		json: FeedsCollection
+	}
+	export const scalaLib: {
+		inScala: () => boolean;
+		getMetadataValue: (value: string) => string;
+		getLocationId: () => string;
 	}
 }

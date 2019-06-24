@@ -11,6 +11,7 @@ import ArrayFeedsCollection from 'lib/ArrayFeedsCollection';
 import fetchJsonp from 'fetch-jsonp';
 import ConfigLoader from 'lib/ConfigLoader';
 import errors, { ResourceNotFoundError } from 'lib/Errors';
+import ScalaLib from './lib/ScalaLib';
 
 const OpenLoopConnect = () => {
 	// OpenLoopConnect HTML5 SDK Library.
@@ -33,6 +34,7 @@ const OpenLoopConnect = () => {
 				return defaultValue;
 			}
 		})),
+		_scalaLib = ScalaLib,
 		_configFile = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:CONFIG-FILE}}}'), true),
 		_playCallback = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:PLAY-CALLBACK}}}'), true),
 		_forceDefault = new Defaultable(null, null, false),
@@ -61,6 +63,7 @@ const OpenLoopConnect = () => {
 			}
 			return frameId;
 		}),
+		_lastPublishedDate = new Defaultable(new Date('2000-10-10')),
 		_isDebug = new Defaultable(false, () => (getQueryString('debug') !== null)),
 		_isLive = new Defaultable(false, isLive),
 		_isConfigLoaded = () => _configLoaded,
@@ -74,6 +77,7 @@ const OpenLoopConnect = () => {
 			_feeds.assets.setFeedsFromConfig(configData.openLoopConfig.images);
 			_feeds.freeTexts.setFeedsFromConfig(configData.openLoopConfig['free_text']);
 			_feeds.json.setFeedsFromConfig(configData.openLoopConfig.json);
+			_lastPublishedDate.setValue(configData.openLoopConfig['@timestamp'])
 		}),
 		_load = (success, error) => {
 			let promise = _configLoader
@@ -173,6 +177,8 @@ const OpenLoopConnect = () => {
 		getBackgroundColor: _backgroundColor.getValue,
 		setDefaultBackgroundColor: _backgroundColor.setDefault,
 		setDefaultPlayCallback: _setDefaultPlayCallback,
+		getLastPublishedDate: _lastPublishedDate.getValue,
+		setDefaultLastPublishedDate: _lastPublishedDate.setDefault,
 		isLive: _isLive.getValue,
 		isDebug: _isDebug.getValue,
 		isConfigLoaded: _isConfigLoaded,
@@ -180,6 +186,7 @@ const OpenLoopConnect = () => {
 		load: _load,
 		onPlay: _onPlay,
 		reset: _reset,
+		scalaLib: _scalaLib,
 		errors
 	};
 };

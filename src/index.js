@@ -44,6 +44,9 @@ const OpenLoopConnect = () => {
 		_frameId = new Defaultable(null, defaultValue => {
 			// Search for the frameId using sniffing approach.
 			let frameId = null;
+			if (ScalaLib.inScala()) {
+				frameId = ScalaLib.getLocationId();
+			}
 			if (typeof window.BroadSignObject !== 'undefined' && window.BroadSignObject.frame_id !== undefined) {
 				frameId = window.BroadSignObject.frame_id;
 			}

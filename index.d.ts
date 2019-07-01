@@ -34,6 +34,9 @@ declare module 'openloop-html-connect' {
 	export const getBackgroundColor: () => string;
 	export const setDefaultBackgroundColor: (color: string) => void;
 	export const setDefaultPlayCallback: (callback: () => void) => void;
+	export const getLastPublishedDate: () => Date;
+	export const setDefaultLastPublishedDate: (date: Date) => void;
+	export const isPublishedAfter: (date: Date) => boolean;
 	export const isLive: () => boolean;
 	export const isDebug: () => boolean;
 	export const isConfigLoaded: () => boolean;

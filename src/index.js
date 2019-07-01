@@ -47,7 +47,7 @@ const OpenLoopConnect = () => {
 			if (ScalaLib.inScala()) {
 				frameId = ScalaLib.getLocationId();
 			}
-			if (typeof window.BroadSignObject !== 'undefined' && window.BroadSignObject.frame_id !== undefined) {
+			if (frameId === null && typeof window.BroadSignObject !== 'undefined' && window.BroadSignObject.frame_id !== undefined) {
 				frameId = window.BroadSignObject.frame_id;
 			}
 			if (frameId === null) {

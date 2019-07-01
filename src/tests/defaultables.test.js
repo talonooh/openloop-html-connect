@@ -1,6 +1,6 @@
+require('./utils/nodeWindow');
 const openLoopConnect = require('../../');
 const packageJson = require('../../package.json');
-require('./utils/nodeWindow');
 
 describe('openLoopConnect defaultables', () => {
 	const sampleLiveCampaignUrl = 'https://stgdp.openloop.it/QDOT/UK/HTML5/DirectPanel/onetime/index.html';
@@ -29,6 +29,14 @@ describe('openLoopConnect defaultables', () => {
 			it('should throw error', () => {
 				expect(() => {
 					openLoopConnect.getSyncPath()
+				}).toThrowError(openLoopConnect.errors.InvalidOperationError);
+			});
+		});
+
+		describe('when trying to read Last Published Date', () => {
+			it('should throw error', () => {
+				expect(() => {
+					openLoopConnect.getLastPublishedDate()
 				}).toThrowError(openLoopConnect.errors.InvalidOperationError);
 			});
 		});
@@ -244,6 +252,34 @@ describe('openLoopConnect defaultables', () => {
 
 				it('should return true', () => {
 					expect(openLoopConnect.isDebug()).toBeTruthy();
+				});
+			});
+		});
+
+		describe('getLastPublishedDate', () => {
+			it('should return null if there is no default or real value', () => {
+				expect(openLoopConnect.getLastPublishedDate().toString()).toBe(new Date('2000-10-10').toString());
+			});
+
+			it('isPublishedAfter should return false for old and far dates', () => {
+				expect(openLoopConnect.isPublishedAfter(new Date('2017-01-01'))).toBeFalsy();
+			});
+
+			describe('when selecting 2019-07-01 as default published date', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultLastPublishedDate(new Date('2019-07-01'));
+				});
+
+				it('should return correct default value', () => {
+					expect(openLoopConnect.getLastPublishedDate().toString()).toBe(new Date('2019-07-01').toString());
+				});
+
+				it('isPublishedAfter should return true for a date before 2019-07-01', () => {
+					expect(openLoopConnect.isPublishedAfter(new Date('2018-12-25'))).toBeTruthy();
+				});
+
+				it('isPublishedAfter should return false for a date after 2019-07-01', () => {
+					expect(openLoopConnect.isPublishedAfter(new Date('2019-07-02'))).toBeFalsy();
 				});
 			});
 		});

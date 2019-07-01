@@ -66,7 +66,8 @@ const OpenLoopConnect = () => {
 			}
 			return frameId;
 		}),
-		_lastPublishedDate = new Defaultable(new Date('2000-10-10').getTime()),
+		_lastPublishedDate = new Defaultable(new Date('2000-10-10')),
+		_isPublishedAfter = date => _lastPublishedDate.getValue() > date,
 		_isDebug = new Defaultable(false, () => (getQueryString('debug') !== null)),
 		_isLive = new Defaultable(false, isLive),
 		_isConfigLoaded = () => _configLoaded,
@@ -80,7 +81,7 @@ const OpenLoopConnect = () => {
 			_feeds.assets.setFeedsFromConfig(configData.openLoopConfig.images);
 			_feeds.freeTexts.setFeedsFromConfig(configData.openLoopConfig['free_text']);
 			_feeds.json.setFeedsFromConfig(configData.openLoopConfig.json);
-			_lastPublishedDate.setValue(configData.openLoopConfig['@timestamp'])
+			_lastPublishedDate.setValue(new Date(parseInt(configData.openLoopConfig['@timestamp'])*1000));
 		}),
 		_load = (success, error) => {
 			let promise = _configLoader
@@ -148,6 +149,7 @@ const OpenLoopConnect = () => {
 			_configFile.reset();
 			_playCallback.reset();
 			_forceDefault.reset();
+			_lastPublishedDate.reset();
 			_width.reset();
 			_height.reset();
 			_backgroundColor.reset();
@@ -182,6 +184,7 @@ const OpenLoopConnect = () => {
 		setDefaultPlayCallback: _setDefaultPlayCallback,
 		getLastPublishedDate: _lastPublishedDate.getValue,
 		setDefaultLastPublishedDate: _lastPublishedDate.setDefault,
+		isPublishedAfter: _isPublishedAfter,
 		isLive: _isLive.getValue,
 		isDebug: _isDebug.getValue,
 		isConfigLoaded: _isConfigLoaded,

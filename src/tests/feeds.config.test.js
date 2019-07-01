@@ -1,7 +1,7 @@
-const path = require('path');
-const openLoopConnect = require('../../');
 require('./utils/nodeWindow');
 require('./utils/nodeJsonp');
+const path = require('path');
+const openLoopConnect = require('../../');
 
 describe('using config files', () => {
 	const configPath = (configFile) => path.resolve('src/tests/configs/' + configFile);

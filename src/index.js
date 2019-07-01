@@ -8,7 +8,6 @@ import {
 } from 'lib/Utils';
 import FeedsCollection from 'lib/FeedsCollection';
 import ArrayFeedsCollection from 'lib/ArrayFeedsCollection';
-import fetchJsonp from 'fetch-jsonp';
 import ConfigLoader from 'lib/ConfigLoader';
 import errors, { ResourceNotFoundError } from 'lib/Errors';
 import ScalaLib from './lib/ScalaLib';

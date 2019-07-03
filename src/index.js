@@ -80,7 +80,7 @@ const OpenLoopConnect = () => {
 			_feeds.assets.setFeedsFromConfig(configData.openLoopConfig.images);
 			_feeds.freeTexts.setFeedsFromConfig(configData.openLoopConfig['free_text']);
 			_feeds.json.setFeedsFromConfig(configData.openLoopConfig.json);
-			_lastPublishedDate.setValue(new Date(parseInt(configData.openLoopConfig['@timestamp'])*1000));
+			_lastPublishedDate.setValue(new Date(parseInt(configData.openLoopConfig['@timestamp']) * 1000));
 		}),
 		_load = (success, error) => {
 			let promise = _configLoader

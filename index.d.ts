@@ -1,16 +1,18 @@
 declare module 'openloop-html-connect' {
 	export class ArrayFeed {
-		addItem: (itemPath: string) => ArrayFeed;
+		addItem: (itemPath: string, object?: JSON) => ArrayFeed;
 		getItems: () => Array<string>;
 	}
 
 	export class ArrayFeedCollection extends FeedsCollection {
+		addDefaultFeed: (feedId: string) => ArrayFeed;
+		getFeed: (feedId: string) => Array<string>;
 	}
 
 	export class FeedsCollection {
 		setFeedsFromConfig: (configData: JSON | XMLDocument) => void;
-		getFeed: (feedId: string) => Array<ArrayFeed>;
-		addDefaultFeed: (feedId: string) => ArrayFeed;
+		getFeed: (feedId: string) => Object;
+		addDefaultFeed: (feedId: string, feedData: Object) => void;
 		addDefaultFeedFromFile: (feedId: string, filePath: string) => void;
 		loadDefaultFeedsFromFiles: () => Promise<unknown>;
 		reset: () => void;

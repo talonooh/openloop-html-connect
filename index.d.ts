@@ -11,8 +11,8 @@ declare module 'openloop-html-connect' {
 
 	export class FeedsCollection {
 		setFeedsFromConfig: (configData: JSON | XMLDocument) => void;
-		getFeed: (feedId: string) => Object;
-		addDefaultFeed: (feedId: string, feedData: Object) => void;
+		getFeed: (feedId: string) => Array<ArrayFeed> | Array<string>;
+		addDefaultFeed: (feedId: string, feedData: any) => ArrayFeed;
 		addDefaultFeedFromFile: (feedId: string, filePath: string) => void;
 		loadDefaultFeedsFromFiles: () => Promise<unknown>;
 		reset: () => void;
@@ -34,6 +34,9 @@ declare module 'openloop-html-connect' {
 	export const getBackgroundColor: () => string;
 	export const setDefaultBackgroundColor: (color: string) => void;
 	export const setDefaultPlayCallback: (callback: () => void) => void;
+	export const getLastPublishedDate: () => Date;
+	export const setDefaultLastPublishedDate: (date: Date) => void;
+	export const isPublishedAfter: (date: Date) => boolean;
 	export const isLive: () => boolean;
 	export const isDebug: () => boolean;
 	export const isConfigLoaded: () => boolean;
@@ -45,5 +48,12 @@ declare module 'openloop-html-connect' {
 		assets: ArrayFeedCollection;
 		freeTexts: ArrayFeedCollection;
 		json: FeedsCollection
+	};
+	export const setDefaultLastPublishedDate: (timestamp: number) => void;
+	export const getLastPublishedDate: () => number;
+	export const scalaLib: {
+		inScala: () => boolean;
+		getMetadataValue: (value: string) => string;
+		getLocationId: () => string;
 	}
 }

@@ -1,7 +1,7 @@
-const path = require('path');
-const openLoopConnect = require('../../');
 require('./utils/nodeWindow');
 require('./utils/nodeFetch');
+const path = require('path');
+const openLoopConnect = require('../../');
 
 describe('openLoopConnect.feeds using defaults', () => {
 	beforeEach(async () => new Promise(resolve => {

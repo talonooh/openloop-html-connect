@@ -1,5 +1,5 @@
-const openLoopConnect = require('../../');
 require('./utils/nodeWindow');
+const openLoopConnect = require('../../');
 
 describe('openLoopConnect onPlay', () => {
 	const onPlayListener = jest.fn();

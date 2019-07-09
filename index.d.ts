@@ -1,6 +1,6 @@
 declare module 'openloop-html-connect' {
 	export class ArrayFeed {
-		addItem: (itemPath: string) => ArrayFeed;
+		addItem: (itemPath: string, object?: JSON) => ArrayFeed;
 		getItems: () => Array<string>;
 	}
 

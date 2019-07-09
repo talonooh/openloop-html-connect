@@ -8,9 +8,9 @@ import {
 } from 'lib/Utils';
 import FeedsCollection from 'lib/FeedsCollection';
 import ArrayFeedsCollection from 'lib/ArrayFeedsCollection';
-import fetchJsonp from 'fetch-jsonp';
 import ConfigLoader from 'lib/ConfigLoader';
 import errors, { ResourceNotFoundError } from 'lib/Errors';
+import ScalaLib from './lib/ScalaLib';
 
 const OpenLoopConnect = () => {
 	// OpenLoopConnect HTML5 SDK Library.
@@ -33,6 +33,7 @@ const OpenLoopConnect = () => {
 				return defaultValue;
 			}
 		})),
+		_scalaLib = ScalaLib,
 		_configFile = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:CONFIG-FILE}}}'), true),
 		_playCallback = new Defaultable(null, accessorFromOpenLoopFlag('{{{OPENLOOP-HTML-CONNECT:PLAY-CALLBACK}}}'), true),
 		_forceDefault = new Defaultable(null, null, false),
@@ -42,7 +43,10 @@ const OpenLoopConnect = () => {
 		_frameId = new Defaultable(null, defaultValue => {
 			// Search for the frameId using sniffing approach.
 			let frameId = null;
-			if (typeof window.BroadSignObject !== 'undefined' && window.BroadSignObject.frame_id !== undefined) {
+			if (ScalaLib.inScala()) {
+				frameId = ScalaLib.getLocationId();
+			}
+			if (frameId === null && typeof window.BroadSignObject !== 'undefined' && window.BroadSignObject.frame_id !== undefined) {
 				frameId = window.BroadSignObject.frame_id;
 			}
 			if (frameId === null) {
@@ -61,6 +65,8 @@ const OpenLoopConnect = () => {
 			}
 			return frameId;
 		}),
+		_lastPublishedDate = new Defaultable(new Date('2000-10-10')),
+		_isPublishedAfter = date => _lastPublishedDate.getValue() > date,
 		_isDebug = new Defaultable(false, () => (getQueryString('debug') !== null)),
 		_isLive = new Defaultable(false, isLive),
 		_isConfigLoaded = () => _configLoaded,
@@ -74,6 +80,7 @@ const OpenLoopConnect = () => {
 			_feeds.assets.setFeedsFromConfig(configData.openLoopConfig.images);
 			_feeds.freeTexts.setFeedsFromConfig(configData.openLoopConfig['free_text']);
 			_feeds.json.setFeedsFromConfig(configData.openLoopConfig.json);
+			_lastPublishedDate.setValue(new Date(parseInt(configData.openLoopConfig['@timestamp']) * 1000));
 		}),
 		_load = (success, error) => {
 			let promise = _configLoader
@@ -141,6 +148,7 @@ const OpenLoopConnect = () => {
 			_configFile.reset();
 			_playCallback.reset();
 			_forceDefault.reset();
+			_lastPublishedDate.reset();
 			_width.reset();
 			_height.reset();
 			_backgroundColor.reset();
@@ -173,6 +181,9 @@ const OpenLoopConnect = () => {
 		getBackgroundColor: _backgroundColor.getValue,
 		setDefaultBackgroundColor: _backgroundColor.setDefault,
 		setDefaultPlayCallback: _setDefaultPlayCallback,
+		getLastPublishedDate: _lastPublishedDate.getValue,
+		setDefaultLastPublishedDate: _lastPublishedDate.setDefault,
+		isPublishedAfter: _isPublishedAfter,
 		isLive: _isLive.getValue,
 		isDebug: _isDebug.getValue,
 		isConfigLoaded: _isConfigLoaded,
@@ -180,6 +191,7 @@ const OpenLoopConnect = () => {
 		load: _load,
 		onPlay: _onPlay,
 		reset: _reset,
+		scalaLib: _scalaLib,
 		errors
 	};
 };

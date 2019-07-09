@@ -1,7 +1,7 @@
-const path = require('path');
-const openLoopConnect = require('../../');
 require('./utils/nodeWindow');
 require('./utils/nodeJsonp');
+const path = require('path');
+const openLoopConnect = require('../../');
 
 describe('using config files', () => {
 	const configPath = (configFile) => path.resolve('src/tests/configs/' + configFile);
@@ -96,6 +96,15 @@ describe('using config files', () => {
 				expect(regions.region[2]['@condition']).toBe('2');
 			});
 		});
+
+		describe('isPublishedAfter', () => {
+			it('should return false for a date after 2018-02-16', () => {
+				expect(openLoopConnect.isPublishedAfter(new Date('2018-02-17'))).toBe(false);
+			});
+			it('should return true for a date before 2018-02-16', () => {
+				expect(openLoopConnect.isPublishedAfter(new Date('2018-02-15'))).toBe(true);
+			});
+		});
 	});
 
 	describe('when loading a complex config', () => {
@@ -129,6 +138,15 @@ describe('using config files', () => {
 				expect(textFeed2[0]).toBe('Text number 1');
 				expect(textFeed2[1]).toBe('Text number 2');
 				expect(textFeed2[2]).toBe(undefined);
+			});
+		});
+
+		describe('isPublishedAfter', () => {
+			it('should return false for a date after 2018-03-02', () => {
+				expect(openLoopConnect.isPublishedAfter(new Date('2018-03-03'))).toBe(false);
+			});
+			it('should return true for a date before 2018-03-02', () => {
+				expect(openLoopConnect.isPublishedAfter(new Date('2018-03-01'))).toBe(true);
 			});
 		});
 	});

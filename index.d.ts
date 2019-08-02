@@ -24,7 +24,9 @@ declare module 'openloop-html-connect' {
 	export const setDefaultSyncPath: (syncPath: string) => void;
 	export const setDefaultConfigFile: (configPath: string) => void;
 	export const getFrameId: () => string;
+	export const getPlayerId: () => string;
 	export const setDefaultFrameId: (frameId: string) => void;
+	export const setDefaultPlayerId: (playerId: string) => void;
 	export const getForceDefault: () => boolean;
 	export const setDefaultForceDefault: (flag: boolean) => void;
 	export const getWidth: () => number;

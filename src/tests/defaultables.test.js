@@ -98,7 +98,7 @@ describe('openLoopConnect defaultables', () => {
 				});
 			});
 		});
-
+		/*  */
 		describe('getFrameId', () => {
 			it('should return null if there is no query string', () => {
 				expect(() => {
@@ -135,18 +135,7 @@ describe('openLoopConnect defaultables', () => {
 					});
 				});
 			});
-
-			describe('when using player_id on the query string', () => {
-				beforeEach(() => {
-					setLocationHref(sampleLiveCampaignUrl + '?player_id=123456789');
-				});
-
-				it('should return correct value', () => {
-					expect(openLoopConnect.getFrameId()).toBe('123456789');
-				});
-			});
-
-			describe('when using BoardSignObject', () => {
+			describe('when using BroadSignObject', () => {
 				beforeEach(() => {
 					window.BroadSignObject = {
 						frame_id: '999'
@@ -158,7 +147,67 @@ describe('openLoopConnect defaultables', () => {
 				});
 			});
 		});
+		/*  */
+		describe('getPlayerId', () => {
+			it('should return null if there is no query string', () => {
+				expect(() => {
+					openLoopConnect.getPlayerId()
+				}).toThrowError(openLoopConnect.errors.ResourceNotFoundError);
+			});
 
+			describe('when using setDefaultPlayerId', () => {
+				beforeEach(() => {
+					openLoopConnect.setDefaultPlayerId('456');
+				});
+
+				it('should return default value', () => {
+					expect(openLoopConnect.getPlayerId()).toBe('456');
+				});
+			});
+
+			describe('when using frame_id on the query string', () => {
+				beforeEach(() => {
+					setLocationHref(sampleLiveCampaignUrl + '?player_id=12345');
+				});
+
+				it('should return correct value', () => {
+					expect(openLoopConnect.getPlayerId()).toBe('12345');
+				});
+
+				describe('and even when using setDefaultPlayerId', () => {
+					beforeEach(() => {
+						openLoopConnect.setDefaultPlayerId('456');
+					});
+
+					it('should still return query string value', () => {
+						expect(openLoopConnect.getPlayerId()).toBe('12345');
+					});
+				});
+			});
+
+			describe('when using player_id on the query string', () => {
+				beforeEach(() => {
+					setLocationHref(sampleLiveCampaignUrl + '?player_id=123456789');
+				});
+
+				it('should return correct value', () => {
+					expect(openLoopConnect.getPlayerId()).toBe('123456789');
+				});
+			});
+
+			describe('when using BoardSignObject', () => {
+				beforeEach(() => {
+					window.BroadSignObject = {
+						player_id: '999'
+					};
+				});
+
+				it('should return correct value', () => {
+					expect(openLoopConnect.getPlayerId()).toBe('999');
+				});
+			});
+		});
+		/*  */
 		describe('getForceDefault', () => {
 			it('should return null if there is no default or real value', () => {
 				expect(openLoopConnect.getForceDefault()).toBeNull();

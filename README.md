@@ -20,6 +20,8 @@ This library interface all you need for getting panel's information or campaign 
     - [setSyncPath(syncPath)](#setsyncpathsyncpath)
     - [getFrameId()](#getframeid)
     - [setDefaultFrameId(frameId)](#setdefaultframeidframeid)
+	- [getPlayerId()](#getplayerid)
+    - [setDefaultPlayerId(playerId)](#setdefaultplayeridplayerid)
     - [isLive()](#islive)
     - [isDebug()](#isdebug)
     - [getVersion()](#getversion)
@@ -72,6 +74,7 @@ Or just copy the content on [index.js](index.js) and paste it on your creative.
 	- **Use getters** (inside sucess callback) to feed your creative using:
 		- `getSyncPath`
 		- `getFrameId`
+		- `getPlayerId`
 		- `isLive`
 		- `isDebug`
 		- `feeds`
@@ -199,8 +202,23 @@ While testing you can call your HTML with a query string with the frame_id.
 openLoopConnect.getFrameId() // will return "123".
 ```
 
+## getPlayerId()<span id="getplayerid"></span>
+Gets the current player id.
+
+This method is only implemented for BroadSign players and will throw an `InvalidOperationError` if called while in a Scala player.
+
+While testing you can call your HTML with a query string with the player_id.
+```javascript
+// accessing: myCampaign/index.html?frame_id=123
+openLoopConnect.getFrameId() // will return "123".
+```
+
 ## setDefaultFrameId(frameId)<span id="setdefaultframeidframeid"></span>
 Sets the default frame id that the `getFrameId` method should retrieve in case that there is no other place to retrieve the frameId (like query string).
+
+## setDefaultPlayerId(playerId)<span id="setdefaultplayeridplayerid"></span>
+Sets the default player id that the `getPlayerId` method should retrieve in case that there is no other place to retrieve the playerId (like query string).
+
 
 ## isLive()<span id="islive"></span>
 Returns a boolean. True if it is accessing live (no offline sync).
@@ -341,7 +359,7 @@ All the errors that this library throws, inherits from this error type.
 
 ### errors.ResourceNotFoundError<span id="errorsresourcenotfounderror"></span>
 Thrown when:
-- `getFrameId` was called but is not setted on query string.
+- `getFrameId` or `getPlayerId` are called but there was no value set as query string.
 - `getFeed` was called but the requested feed was not found.
 
 ### errors.InvalidOperationError<span id="errorsinvalidoperationerror"></span>

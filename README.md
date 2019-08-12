@@ -209,8 +209,8 @@ This method is only implemented for BroadSign players and will throw an `Invalid
 
 While testing you can call your HTML with a query string with the player_id.
 ```javascript
-// accessing: myCampaign/index.html?frame_id=123
-openLoopConnect.getFrameId() // will return "123".
+// accessing: myCampaign/index.html?player_id=123
+openLoopConnect.getPlayerId() // will return "123".
 ```
 
 ## setDefaultFrameId(frameId)<span id="setdefaultframeidframeid"></span>

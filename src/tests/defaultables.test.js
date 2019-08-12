@@ -98,7 +98,7 @@ describe('openLoopConnect defaultables', () => {
 				});
 			});
 		});
-		/*  */
+
 		describe('getFrameId', () => {
 			it('should return null if there is no query string', () => {
 				expect(() => {
@@ -147,7 +147,7 @@ describe('openLoopConnect defaultables', () => {
 				});
 			});
 		});
-		/*  */
+
 		describe('getPlayerId', () => {
 			it('should return null if there is no query string', () => {
 				expect(() => {
@@ -207,7 +207,7 @@ describe('openLoopConnect defaultables', () => {
 				});
 			});
 		});
-		/*  */
+
 		describe('getForceDefault', () => {
 			it('should return null if there is no default or real value', () => {
 				expect(openLoopConnect.getForceDefault()).toBeNull();

@@ -11,6 +11,7 @@ import ArrayFeedsCollection from 'lib/ArrayFeedsCollection';
 import ConfigLoader from 'lib/ConfigLoader';
 import errors, { ResourceNotFoundError } from 'lib/Errors';
 import ScalaLib from './lib/ScalaLib';
+import { InvalidOperationError } from './lib/Errors';
 
 const OpenLoopConnect = () => {
 	// OpenLoopConnect HTML5 SDK Library.
@@ -53,10 +54,6 @@ const OpenLoopConnect = () => {
 				frameId = getQueryString('frame_id');
 			}
 			if (frameId === null) {
-				// If frame_id is not found, fallback to player_id.
-				frameId = getQueryString('player_id');
-			}
-			if (frameId === null) {
 				if (defaultValue !== null) {
 					frameId = defaultValue;
 				} else {
@@ -64,6 +61,28 @@ const OpenLoopConnect = () => {
 				}
 			}
 			return frameId;
+		}),
+		_playerId = new Defaultable(null, defaultValue => {
+			// Search for the playerId using sniffing approach.
+			let playerId = null;
+			if (ScalaLib.inScala()) {
+				throw new InvalidOperationError('Player id requested but not implemented for Scala Players');
+			}
+			if (playerId === null && typeof window.BroadSignObject !== 'undefined' && window.BroadSignObject.player_id !== undefined) {
+				playerId = window.BroadSignObject.player_id;
+			}
+			if (playerId === null) {
+				// If frame_id is not found, fallback to player_id.
+				playerId = getQueryString('player_id');
+			}
+			if (playerId === null) {
+				if (defaultValue !== null) {
+					playerId = defaultValue;
+				} else {
+					throw new ResourceNotFoundError('Player id requested but not found! Make sure to open this page with "?player_id=[yourPlayerId]" on the query string.');
+				}
+			}
+			return playerId;
 		}),
 		_lastPublishedDate = new Defaultable(new Date('2000-10-10')),
 		_isPublishedAfter = date => _lastPublishedDate.getValue() > date,
@@ -153,6 +172,7 @@ const OpenLoopConnect = () => {
 			_height.reset();
 			_backgroundColor.reset();
 			_frameId.reset();
+			_playerId.reset();
 			_isDebug.reset();
 			_isLive.reset();
 			_feeds.assets.reset();
@@ -171,7 +191,9 @@ const OpenLoopConnect = () => {
 		setDefaultSyncPath: _syncPath.setDefault,
 		setDefaultConfigFile: _configFile.setDefault,
 		getFrameId: _frameId.getValue,
+		getPlayerId: _playerId.getValue,
 		setDefaultFrameId: _frameId.setDefault,
+		setDefaultPlayerId: _playerId.setDefault,
 		getForceDefault: _forceDefault.getValue,
 		setDefaultForceDefault: _forceDefault.setDefault,
 		getWidth: _width.getValue,
